@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | PRECISION STRESS TEST</title>
+    <title>ALCHEMIST | 7.5 DEGREE V</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,7 @@
     
     <style>
         :root { 
-            /* NAVY PALETTE (V144.0) */
+            /* NAVY PALETTE */
             --bg: #05080f;              
             --card-bg: #0b172a;         
             --dock-bg: #0f203a;         
@@ -93,7 +93,6 @@
             transition: opacity 0.1s; 
         }
 
-        /* OVERLAY (The Answer Fading In) */
         .card-overlay-text {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-family: var(--font-book);
@@ -103,7 +102,7 @@
             transition: opacity 0.1s;
         }
 
-        /* HORIZONTAL DOCK (V144.0 Style) */
+        /* HORIZONTAL DOCK */
         .card-dock { 
             height: 150px; background: var(--dock-bg); 
             border-top: 1px solid var(--border); 
@@ -126,8 +125,6 @@
             font-family: var(--font-book); font-size: 1.1rem; color: var(--text-main); font-weight: 600; 
             opacity: 0.8; text-align: center; line-height: 1.1; padding: 0 4px;
         }
-        
-        /* Highlight States */
         .dock-col.active { background: rgba(56, 189, 248, 0.1); }
         .dock-col.active .dock-val { color: var(--accent); opacity: 1; transform: scale(1.05); }
 
@@ -145,7 +142,7 @@
 <body>
 
     <div id="portal">
-        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Stress Test V145</div></div>
+        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">7.5° Precision V146</div></div>
         <div id="library"></div>
         <div style="margin-top:auto;">
             <div class="section-label">System Tools</div>
@@ -175,7 +172,7 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
     const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
     let db, INDEX = 0, SCORE = 0, POOL = [];
-    const DB_NAME = "AlchemistDB_V145", STORE_NAME = "Vaults";
+    const DB_NAME = "AlchemistDB_V146", STORE_NAME = "Vaults";
 
     // --- FULL 30 QUESTION STRESS TEST DATA ---
     const DEMO_DATA = [
@@ -218,7 +215,6 @@
         const tx = db.transaction([STORE_NAME], "readonly");
         const count = tx.objectStore(STORE_NAME).count();
         count.onsuccess = () => {
-            // Force Reload Data for Stress Test
             const wTx = db.transaction([STORE_NAME], "readwrite");
             wTx.objectStore(STORE_NAME).put(DEMO_DATA, "FACULTY_DEMO");
             wTx.oncomplete = refreshLibrary;
@@ -308,11 +304,9 @@
         bindPhysics(card, q);
     }
 
-    // --- PRECISION PHYSICS ENGINE (V-Logic) ---
+    // --- RAZOR SHARP PHYSICS (7.5 DEGREE CLAMP) ---
     function bindPhysics(el, data) {
         let startX, startY, isDragging = false;
-        
-        // Pivot Point: Bottom Center
         const pivotX = window.innerWidth / 2;
         const pivotY = window.innerHeight;
 
@@ -329,41 +323,41 @@
             const cx = e.touches[0].clientX; 
             const cy = e.touches[0].clientY;
             
-            // Vector Calc
+            // 1. ANGLE CALCULATION
             const dx = cx - pivotX;
             const dy = cy - pivotY;
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
             
-            // V-Clamp: +/- 10 degrees
+            // 2. THE 7.5 DEGREE CLAMP (Razor Sharp V)
             let rot = angleDeg;
-            if (rot > 10) rot = 10;
-            if (rot < -10) rot = -10;
+            if (rot > 7.5) rot = 7.5;   // +7.5 deg
+            if (rot < -7.5) rot = -7.5; // -7.5 deg
 
+            // 3. 0.5 CM TRANSLATION CLAMP
             const dragX = cx - startX;
             const dragY = cy - startY;
-
-            // 0.5 CM CLAMP (Approx 20px)
             const moveX = dragX * 0.12; 
             const moveY = dragY * 0.12;
 
             el.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
             
-            // Fade Logic
+            // 4. FADE LOGIC
             const dist = Math.sqrt(dragX*dragX + dragY*dragY);
-            const intensity = Math.min(dist / 150, 1);
+            const intensity = Math.min(dist / 120, 1);
             
-            qText.style.opacity = Math.max(0, 1 - (intensity * 2.5));
+            qText.style.opacity = Math.max(0, 1 - (intensity * 3));
             ovText.style.opacity = intensity;
             
             [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
 
-            if (dragY < -40 && Math.abs(angleDeg) < 15) {
+            // 5. ZONE LOGIC
+            if (dragY < -40 && Math.abs(angleDeg) < 10) { // Tighter Up Zone
                 ovText.innerHTML = formatText(data.u_txt);
                 colUp.classList.add('active');
-            } else if (dragX > 50) {
+            } else if (dragX > 40) {
                 ovText.innerHTML = formatText(data.r_txt);
                 colRight.classList.add('active');
-            } else if (dragX < -50) {
+            } else if (dragX < -40) {
                 ovText.innerHTML = formatText(data.l_txt);
                 colLeft.classList.add('active');
             }
@@ -373,22 +367,22 @@
             if (!isDragging) return; isDragging=false;
             const x = e.changedTouches[0].clientX - startX;
             const y = e.changedTouches[0].clientY - startY;
-            
             const dx = e.changedTouches[0].clientX - pivotX;
             const dy = e.changedTouches[0].clientY - pivotY;
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-            if (Math.abs(x) > 70 || y < -70) {
-                if (y < -70 && Math.abs(angleDeg) < 20) finishSwipe(el, data, "UP");
-                else if (x > 70) finishSwipe(el, data, "RIGHT");
-                else if (x < -70) finishSwipe(el, data, "LEFT");
+            // Commit Threshold
+            if (Math.abs(x) > 60 || y < -60) {
+                if (y < -60 && Math.abs(angleDeg) < 15) finishSwipe(el, data, "UP");
+                else if (x > 60) finishSwipe(el, data, "RIGHT");
+                else if (x < -60) finishSwipe(el, data, "LEFT");
                 else resetCard(el);
             } else resetCard(el);
         });
     }
 
     function resetCard(el) { 
-        el.style.transition='transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+        el.style.transition='transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1)'; 
         el.style.transform='translate(0,0) rotate(0deg)'; 
         el.querySelector('#q-text').style.opacity = 1;
         el.querySelector('#ov-text').style.opacity = 0;
@@ -398,14 +392,14 @@
     function finishSwipe(el, data, dir) {
         let tx = dir === "RIGHT" ? window.innerWidth : (dir === "LEFT" ? -window.innerWidth : 0);
         let ty = dir === "UP" ? -window.innerHeight : 0;
-        let rot = dir === "RIGHT" ? 10 : (dir === "LEFT" ? -10 : 0);
+        let rot = dir === "RIGHT" ? 7.5 : (dir === "LEFT" ? -7.5 : 0);
         
-        el.style.transition='transform 0.3s ease-in'; 
+        el.style.transition='transform 0.25s ease-out'; 
         el.style.transform=`translate(${tx}px, ${ty}px) rotate(${rot}deg)`;
 
         const corr = (dir===data.actualAns); SCORE += corr?1:0; 
         logData(data.id, dir, corr?"CORRECT":"WRONG", "");
-        setTimeout(()=>{el.remove(); INDEX++; renderCard();}, 300);
+        setTimeout(()=>{el.remove(); INDEX++; renderCard();}, 250);
     }
 
     function closeModal() { document.getElementById('analysis-modal').classList.remove('open'); }
