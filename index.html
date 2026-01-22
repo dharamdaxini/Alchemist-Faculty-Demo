@@ -3,211 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | MASTER UI</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    
+    <title>ALCHEMIST V129.3 | UI REFRESH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,600;1,600&family=Inter:wght@400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #080808;              
-            --card-bg: #141414;         
-            --border: #2a2a2a;          
-            --accent: #e5c100;          
-            --text-main: #eaeaea;       
-            --text-sub: #999;           
-            --green: #2ecc71;           
-            --red: #e74c3c;             
-            --blue: #3498db;            /* Added for 3rd Option (Up) */
-            --font-book: 'Crimson Pro', serif;       
-            --font-head: 'Libre Baskerville', serif; 
-            --font-ui: 'Inter', sans-serif;          
-            --font-code: 'JetBrains Mono', monospace;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
-        body { 
-            margin: 0; height: 100vh; background: var(--bg); color: var(--text-main); 
-            font-family: var(--font-ui); overflow: hidden; display: flex; flex-direction: column; 
-        }
-
-        /* --- PORTAL VIEW --- */
-        #portal { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; }
-        .portal-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .app-title { font-family: var(--font-head); font-size: 1.5rem; color: var(--accent); letter-spacing: 1px; margin-bottom: 5px; }
-        .section-label { font-family: var(--font-code); font-size: 0.6rem; color: #555; margin: 25px 0 10px; letter-spacing: 1.5px; text-transform: uppercase; display: block; }
-        #library { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
-        .topic-tile { background: var(--card-bg); border: 1px solid var(--border); padding: 16px; border-radius: 12px; transition: 0.2s; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
-        .topic-tile:active { transform: scale(0.98); background: #1a1a1a; }
-        .topic-name { color: var(--text-main); font-weight: 700; font-size: 0.85rem; display: block; margin-bottom: 6px; font-family: var(--font-ui); }
-        .topic-meta { color: var(--accent); font-size: 0.6rem; font-family: var(--font-code); opacity: 0.8; }
-        textarea { width: 100%; height: 100px; background: #111; border: 1px solid #333; color: var(--green); font-family: var(--font-code); padding: 12px; border-radius: 8px; font-size: 0.7rem; margin-bottom: 10px; }
-        .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; background: #fff; color: #000; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; font-family: var(--font-ui); letter-spacing: 1px; margin-bottom: 8px; }
-        .btn-gold { background: var(--accent); color: #000; }
-        .btn-dark { background: #222; color: #888; border: 1px solid #333; }
-
-        /* --- SESSION VIEW --- */
-        #session-view { display: none; flex-direction: column; height: 100vh; }
-        #header { width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; background: linear-gradient(to bottom, rgba(8,8,8,1) 0%, rgba(8,8,8,0) 100%); }
-        .brand { font-family: var(--font-ui); font-size: 0.8rem; color: #666; font-weight: 600; }
-        .stat-pill { background: rgba(255,255,255,0.06); padding: 6px 16px; border-radius: 4px; font-size: 0.7rem; border: 1px solid rgba(255,255,255,0.1); font-weight: 600; letter-spacing: 1px; backdrop-filter: blur(4px); font-family: var(--font-code); }
-        .sync-pulse { width: 6px; height: 6px; background: var(--green); border-radius: 50%; opacity: 0; transition: opacity 0.5s ease; box-shadow: 0 0 8px var(--green); }
-        .sync-pulse.active { opacity: 1; }
-
-        #stack-container { position: relative; flex-grow: 1; display: flex; align-items: center; justify-content: center; perspective: 1200px; overflow: visible; }
-
-        .card { 
-            position: absolute; width: 90%; max-width: 380px; height: 70vh; max-height: 650px;
-            background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); 
-            display: flex; flex-direction: column; 
-            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8); 
-            transform-origin: 50% 120%; will-change: transform, opacity; overflow: hidden;
-        }
-        /* Paper Texture */
-        .card::before {
-            content: ""; position: absolute; inset: 0; 
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none; opacity: 0.5;
-        }
-
-        .card-top { padding: 32px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 2; transition: opacity 0.2s; }
+        :root { --bg: #000; --card: #111; --border: #262626; --gold: #ffd600; --green: #2ecc71; --blue: #3498db; --font-chem: 'Crimson Text', serif; --font-ui: 'Inter', sans-serif; --font-code: 'JetBrains Mono', monospace; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { margin: 0; height: 100vh; background: var(--bg); color: #fff; font-family: var(--font-ui); overflow: hidden; display: flex; flex-direction: column; }
         
-        /* THE TRINITY DOCK (3 OPTIONS) */
-        .card-bottom { 
-            height: 140px; border-top: 1px solid #222; display: flex; position: relative; 
-            background: #0e0e0e; flex-shrink: 0; z-index: 2; 
-        }
-
-        .card-meta { font-family: var(--font-code); font-size: 0.6rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px; opacity: 0.8; }
-        .card-q { font-family: var(--font-book); font-size: clamp(1.5rem, 4.5vmin, 2rem); line-height: 1.35; color: #fff; font-weight: 400; }
-
-        /* CHOICE BLOCKS */
-        .choice-block { 
-            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            padding: 10px 5px; overflow: hidden; position: relative; 
-            border-right: 1px solid #1a1a1a;
-        }
-        .choice-block:last-child { border-right: none; }
+        #portal { flex: 1; padding: 30px; overflow-y: auto; padding-bottom: 120px; }
+        h1 { color: var(--gold); letter-spacing: 5px; margin: 0 0 15px 0; font-size: 1.4rem; text-transform: uppercase; font-weight: 900; text-align: center; }
+        .section-label { font-family: var(--font-code); font-size: 0.65rem; color: #555; margin: 15px 0 8px; letter-spacing: 2px; text-transform: uppercase; }
         
-        .choice-label { font-size: 0.55rem; color: #444; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; font-family: var(--font-ui); }
-        .choice-text { 
-            font-family: var(--font-book); font-size: 1rem; color: #bbb; font-weight: 400; text-align: center; line-height: 1.1; 
-            opacity: 0.8; transition: opacity 0.2s;
-        }
+        #library { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .topic-tile { background: var(--card); border: 2px solid var(--border); padding: 12px; border-radius: 12px; transition: 0.2s; }
+        .topic-tile.selected { border-color: var(--blue) !important; background: #001529; }
+        .topic-name { color: var(--gold); font-weight: 900; font-size: 0.8rem; display: block; }
+        .topic-meta { color: #555; font-size: 0.6rem; font-family: var(--font-code); }
 
-        /* Highlight classes for drag */
-        .choice-block.active .choice-text { color: #fff; opacity: 1; transform: scale(1.05); }
+        textarea { width: 100%; height: 100px; background: #111; border: 1px solid #333; color: var(--green); font-family: var(--font-code); padding: 12px; border-radius: 12px; font-size: 11px; }
 
-        .card-dummy { z-index: -1; background: #181818; transform: scale(0.96) translateY(12px); opacity: 0.6; border-color: #222; border-radius: 16px; }
-        .card-dummy-2 { z-index: -2; background: #202020; transform: scale(0.92) translateY(24px); opacity: 0.3; border-color: #1a1a1a; border-radius: 16px; }
+        /* FIXED FOOTER CONTROLS (NEW) */
+        .footer-controls { position: fixed; bottom: 20px; left: 5%; width: 90%; z-index: 9500; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; border: 1px solid #222; }
+        
+        .btn { width: 100%; padding: 16px; border-radius: 100px; border: none; background: #fff; color: #000; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 12px; }
+        .btn-gold { background: var(--gold); }
+        .btn-blue { background: transparent; border: 1px solid var(--blue); color: var(--blue); }
 
-        /* NATURAL OVERLAYS (Ink Wash) */
-        .overlay-bg {
-            position: absolute; inset: 0; 
-            z-index: 10; opacity: 0; transition: opacity 0.1s; pointer-events: none;
-            mix-blend-mode: soft-light; /* Natural blend */
-        }
-        .overlay-right-bg { background: var(--green); }
-        .overlay-left-bg { background: var(--red); }
-        .overlay-up-bg { background: var(--blue); } /* Blue for the 3rd option */
-        .overlay-down-bg { background: var(--accent); } /* Gold for Analysis */
-
-        /* OVERLAY TEXT (Big Labels) */
-        .overlay-text {
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            width: 80%; text-align: center;
-            font-family: var(--font-ui); font-weight: 800; font-size: 1.4rem;
-            color: #fff; z-index: 20; opacity: 0; pointer-events: none;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        /* MODALS */
-        #analysis-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 5000; display: none; flex-direction: column; padding: 30px; opacity: 0; transition: opacity 0.25s ease; }
-        #analysis-modal.open { display: flex; opacity: 1; }
-        .modal-content { flex: 1; display: flex; flex-direction: column; justify-content: center; color: #dcdcdc; line-height: 1.8; font-size: 1.25rem; font-family: var(--font-book); }
-        .modal-btn { background: var(--accent); color: #050505; border: none; padding: 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-top: 20px; text-transform: uppercase; letter-spacing: 1.5px; font-family: var(--font-ui); }
-
-        .progress-line { position: fixed; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.4s; }
+        /* HEADER & STACK (SESSION) */
+        #header { width: 92%; margin: 20px auto 10px; flex-shrink: 0; z-index: 1000; display: none; }
+        .header-meta { display: flex; justify-content: space-between; font-family: var(--font-code); font-size: 0.75rem; color: #777; font-weight: 900; }
+        .progress-track { width: 100%; height: 3px; background: #1a1a1a; margin-top: 8px; border-radius: 2px; }
+        #progress-bar { height: 100%; background: var(--gold); width: 0%; transition: 0.3s; }
+        #stack { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); width: 94%; max-width: 420px; height: 60vh; perspective: 1500px; display: none; align-items: center; justify-content: center; z-index: 500; }
+        .card { position: absolute; width: 100%; height: 100%; background: var(--card); border-radius: 40px; border: 1px solid var(--border); padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .card-q { font-family: var(--font-chem); font-size: clamp(16px, 4vmin, 20px); line-height: 1.45; color: #fff; }
+        .swipe-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); color: #fff; font-weight: 900; opacity: 0; pointer-events: none; border-radius: 40px; border: 3px solid var(--gold); }
+        
+        #global-overlay { position: fixed; inset: 0; background: #080808; z-index: 10000; padding: 40px; display: none; flex-direction: column; }
+        #global-overlay.active { display: flex; }
+        .overlay-body { font-size: 1rem; color: #ddd; font-family: var(--font-chem); overflow-y: auto; flex-grow: 1; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="portal">
-        <div class="portal-header">
-            <div class="app-title">Alchemist</div>
-            <div class="section-label">Master Edition V140</div>
-        </div>
-        <div id="library"></div>
-        <div style="margin-top:auto;">
-            <div class="section-label">System Tools</div>
-            <textarea id="data-input" placeholder="Paste TSV Data..."></textarea>
-            <button class="btn btn-gold" onclick="importDataset()">Import Data</button>
-            <button class="btn btn-dark" onclick="clearLibrary()">Reset System</button>
-        </div>
-    </div>
+<div id="global-overlay">
+    <div id="overlay-content" class="overlay-body"></div>
+    <button class="btn btn-gold" onclick="closeOverlay()">BACK TO SESSION</button>
+</div>
 
-    <div id="session-view">
-        <div id="header">
-            <div class="brand" onclick="exitSession()">← LIBRARY</div>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <div class="stat-pill" id="score-disp">0% ACCURACY</div>
-                <div class="sync-pulse" id="sync-dot"></div>
-            </div>
-        </div>
-
-        <div id="stack-container">
-            <div class="card card-dummy-2"></div>
-            <div class="card card-dummy"></div>
-            </div>
-        <div class="progress-line" id="progress"></div>
+<div id="portal">
+    <h1>Alchemist_V129.3</h1>
+    <div class="section-label">CURRICULUM_VAULTS</div>
+    <div id="library"></div>
+    
+    <div id="import-section">
+        <div class="section-label">IMPORT_DATASET (TAB_SEPARATED)</div>
+        <textarea id="data-input" placeholder="Paste 12-column TSV data..."></textarea>
+        <button id="import-btn" class="btn btn-gold" onclick="importDataset()" style="margin-top:10px;">REGISTER TO VAULT</button>
+        <button class="btn" style="background:#111; color:#333; margin-top:5px;" onclick="clearLibrary()">WIPE REPOSITORY</button>
     </div>
+</div>
 
-    <div id="analysis-modal">
-        <div class="modal-content" id="modal-text"></div>
-        <button class="modal-btn" onclick="closeModal()">CONTINUE</button>
+<div class="footer-controls">
+    <div id="merge-controls" style="display:none;">
+        <button id="execute-merge-btn" class="btn btn-blue" disabled onclick="executeMerge()">SELECT 2 TOPICS</button>
+        <button class="btn" style="background:transparent; color:#555; margin-top:5px; border:none;" onclick="cancelMerge()">CANCEL</button>
     </div>
+    <button id="merge-mode-btn" class="btn btn-blue" onclick="toggleMergeMode()">ENABLE VAULT MERGER</button>
+</div>
+
+<div id="header">
+    <div class="header-meta"><span id="p-text">---</span><span id="score-text">0 XP</span></div>
+    <div class="progress-track"><div id="progress-bar"></div></div>
+</div>
+<div id="stack"></div>
 
 <script>
-    // --- CONFIG ---
-    // Updated Deployment ID
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
-    const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
-    let db, INDEX = 0, SCORE = 0, POOL = [];
-    const DB_NAME = "AlchemistDB_V140", STORE_NAME = "Vaults";
+    let db;
+    const DB_NAME = "AlchemistDB", STORE_NAME = "Vaults";
+    let VAULT = [], POOL = [], MISTAKES = [], SCORE = 0, MODE = "INIT", INDEX = 1;
+    let SEL_PATH = "", SEL_CORE = "", mergeMode = false, selectedForMerge = [];
 
-    // DEMO DATA (For testing)
-    const DEMO_DATA = [
-        {id:"FAC_01", set:"FACULTY_DEMO", dom:"THERMO", q:"Relationship between Kp and Kc for N2 + 3H2 <=> 2NH3?", u:"Kp = Kc(RT)", r:"Kp = Kc(RT)^-2", l:"Kp = Kc(RT)^2", ans:"RIGHT", expl:"Delta n = -2. Thus Kp = Kc(RT)^-2."},
-        {id:"FAC_02", set:"FACULTY_DEMO", dom:"KINETIC", q:"If Ea = 50 kJ/mol, rate increase from 300K to 310K?", u:"1.5x", r:"~2.0x", l:"3.0x", ans:"RIGHT", expl:"Using Arrhenius eq, ln(k2/k1) approx 0.693."},
-        {id:"FAC_03", set:"FACULTY_DEMO", dom:"QUANTUM", q:"Energy of 1D box particle in 2nd excited state (n=3)?", u:"h^2/8mL^2", r:"9h^2/8mL^2", l:"4h^2/8mL^2", ans:"RIGHT", expl:"E scales with n^2. 2nd excited is n=3. 3^2=9."}
-    ];
-
-    // --- DB INIT ---
     const request = indexedDB.open(DB_NAME, 1);
     request.onupgradeneeded = e => { db = e.target.result; db.createObjectStore(STORE_NAME); };
-    request.onsuccess = e => { 
-        db = e.target.result; 
-        // Auto-load Demo
-        const tx = db.transaction([STORE_NAME], "readonly");
-        const count = tx.objectStore(STORE_NAME).count();
-        count.onsuccess = () => {
-            if(count.result === 0) {
-                const wTx = db.transaction([STORE_NAME], "readwrite");
-                wTx.objectStore(STORE_NAME).put(DEMO_DATA, "FACULTY_DEMO");
-                wTx.oncomplete = refreshLibrary;
-            } else refreshLibrary();
-        }
-    };
+    request.onsuccess = e => { db = e.target.result; refreshLibrary(); };
 
     function refreshLibrary() {
-        const container = document.getElementById('library'); container.innerHTML = "";
-        db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME).openCursor().onsuccess = e => {
+        const store = db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME);
+        const container = document.getElementById('library');
+        container.innerHTML = "";
+        selectedForMerge = [];
+        store.openCursor().onsuccess = e => {
             const cursor = e.target.result;
             if (cursor) {
                 const div = document.createElement('div');
                 div.className = "topic-tile";
-                div.onclick = () => startSession(cursor.key);
+                div.id = `tile-${cursor.key}`;
+                div.onclick = () => handleTileClick(cursor.key, div);
                 div.innerHTML = `<span class="topic-name">${cursor.key}</span><span class="topic-meta">${cursor.value.length} CARDS</span>`;
                 container.appendChild(div);
                 cursor.continue();
@@ -215,202 +107,142 @@
         };
     }
 
-    // --- TYPESETTER ---
-    function formatText(t) {
-        if(!t) return "";
-        t = t.replace(/\bKp\b/g, '<i>K</i><sub>p</sub>').replace(/\bKc\b/g, '<i>K</i><sub>c</sub>').replace(/\bDelta\b/g, 'Δ');
-        t = t.replace(/<=>/g, '⇌').replace(/->/g, '→').replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>').replace(/\^(\-?\d+)/g, '<sup>$1</sup>');
-        return t;
+    function handleTileClick(name, el) {
+        if (mergeMode) {
+            if (selectedForMerge.includes(name)) {
+                selectedForMerge = selectedForMerge.filter(n => n !== name);
+                el.classList.remove('selected');
+            } else if (selectedForMerge.length < 2) {
+                selectedForMerge.push(name);
+                el.classList.add('selected');
+            }
+            const mBtn = document.getElementById('execute-merge-btn');
+            mBtn.disabled = selectedForMerge.length !== 2;
+            mBtn.innerText = selectedForMerge.length === 2 ? "EXECUTE MERGE" : `SELECT ${2 - selectedForMerge.length} MORE`;
+        } else {
+            loadDataset(name);
+        }
     }
 
-    // --- SESSION ---
-    function startSession(key) {
-        db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME).get(key).onsuccess = e => {
-            let data = e.target.result;
-            // SHUFFLE POOL
-            POOL = [...data];
-            for (let i = POOL.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [POOL[i], POOL[j]] = [POOL[j], POOL[i]];
-            }
-            INDEX = 0; SCORE = 0;
+    function toggleMergeMode() {
+        mergeMode = true;
+        document.getElementById('merge-controls').style.display = 'block';
+        document.getElementById('merge-mode-btn').style.display = 'none';
+        document.getElementById('import-section').style.display = 'none';
+    }
+
+    function cancelMerge() {
+        mergeMode = false;
+        document.getElementById('merge-controls').style.display = 'none';
+        document.getElementById('merge-mode-btn').style.display = 'block';
+        document.getElementById('import-section').style.display = 'block';
+        refreshLibrary();
+    }
+
+    function executeMerge() {
+        if (selectedForMerge.length !== 2) return;
+        const n = prompt("Merged Vault Name:");
+        if (!n) return;
+        const s = db.transaction([STORE_NAME], "readwrite").objectStore(STORE_NAME);
+        let d = [], c = 0;
+        selectedForMerge.forEach(m => s.get(m).onsuccess = e => {
+            d = d.concat(e.target.result);
+            c++;
+            if (c === 2) { s.put(d, n); cancelMerge(); }
+        });
+    }
+
+    function loadDataset(name) {
+        db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME).get(name).onsuccess = e => {
+            VAULT = e.target.result;
             document.getElementById('portal').style.display = 'none';
-            document.getElementById('session-view').style.display = 'flex';
-            renderCard();
-            logData("INIT", "START", key, "");
+            document.querySelector('.footer-controls').style.display = 'none';
+            ['header', 'stack'].forEach(id => document.getElementById(id).style.display = 'flex');
+            renderS0();
         };
     }
 
-    function exitSession() {
-        document.getElementById('session-view').style.display = 'none';
-        document.getElementById('portal').style.display = 'flex';
+    function renderS0() { MODE = "S_PATH"; renderSlide("SELECT MODE", "TEST (STRICT)", "LEARN (BRIDGE)", "QUIZ + LEARN", "QUIZ (DRILL)"); }
+    function renderS1() { MODE = "S_CORE"; renderSlide("MAINLINE CORE", "CHANGE", "ENERGY", "MATTER", "ANALYSIS"); }
+    function start() { MODE = "ACTIVE"; INDEX = 1; SCORE = 0; MISTAKES = []; POOL = VAULT.sort(() => 0.5 - Math.random()).slice(0, 20); renderNext(); }
+
+    function renderSlide(q, up, lt, rt, dn) {
+        const s = document.getElementById('stack'); s.innerHTML = "";
+        const c = document.createElement('div'); c.className = "card";
+        c.innerHTML = `<div class="card-q">${q}</div><div class="swipe-label sl-up">${up}</div><div class="swipe-label sl-left">${lt}</div><div class="swipe-label sl-right">${rt}</div><div class="swipe-label sl-down">${dn}</div>`;
+        s.appendChild(c); bindPhysics(c, {});
     }
 
-    function renderCard() {
-        if (INDEX >= POOL.length) { renderEnd(); return; }
-        const q = POOL[INDEX];
-        
-        // SHUFFLE OPTIONS
-        const opts = [
-            { txt: q.u, isCorrect: q.ans === "UP", dir: "UP" },
-            { txt: q.r, isCorrect: q.ans === "RIGHT", dir: "RIGHT" },
-            { txt: q.l, isCorrect: q.ans === "LEFT", dir: "LEFT" }
-        ].sort(() => Math.random() - 0.5);
+    function renderNext() {
+        const s = document.getElementById('stack'); s.innerHTML = "";
+        if (!POOL.length) { renderEnd(); return; }
+        const q = { ...POOL[0] };
+        const c = document.createElement('div'); c.className = "card";
+        const opts = [{ t: q.u, c: q.ans === "UP" }, { t: q.r, c: q.ans === "RIGHT" }, { t: q.l, c: q.ans === "LEFT" }].sort(() => 0.5 - Math.random());
+        q.u = opts[0].t; q.r = opts[1].t; q.l = opts[2].t;
+        q.ans = opts[0].c ? "UP" : (opts[1].c ? "RIGHT" : "LEFT");
+        let lbl = (SEL_PATH === "LEARN") ? "⬇ DEEP DIVE" : "⬇ HINT";
+        c.innerHTML = `<div class="card-q">${format(q.q)}</div><div class="swipe-label sl-up">${q.u}</div><div class="swipe-label sl-left">${q.l}</div><div class="swipe-label sl-right">${q.r}</div><div class="swipe-label sl-down">${lbl}</div>`;
+        s.appendChild(c); bindPhysics(c, q); updateHUD();
+    }
 
-        q.u_txt = opts[0].txt; q.u_chk = opts[0].isCorrect;
-        q.r_txt = opts[1].txt; q.r_chk = opts[1].isCorrect;
-        q.l_txt = opts[2].txt; q.l_chk = opts[2].isCorrect;
-        q.actualAns = q.u_chk ? "UP" : (q.r_chk ? "RIGHT" : "LEFT");
-
-        const card = document.createElement('div');
-        card.className = "card";
-        card.id = "active-card";
-        
-        card.innerHTML = `
-            <div class="overlay-bg overlay-right-bg" id="bg-right"></div>
-            <div class="overlay-bg overlay-left-bg" id="bg-left"></div>
-            <div class="overlay-bg overlay-up-bg" id="bg-up"></div>
-            <div class="overlay-bg overlay-down-bg" id="bg-down"></div>
-
-            <div class="card-top" id="q-container">
-                <div class="card-meta">${q.dom || 'CHEMISTRY'} • Q${INDEX+1}</div>
-                <div class="card-q">${formatText(q.q)}</div>
-            </div>
-            
-            <div class="overlay-text" id="overlay-main-text"></div>
-
-            <div class="card-bottom">
-                <div class="choice-block" id="blk-left">
-                    <div class="choice-label">← LEFT</div>
-                    <div class="choice-text">${formatText(q.l_txt)}</div>
-                </div>
-                <div class="choice-block" id="blk-up">
-                    <div class="choice-label">↑ UP</div>
-                    <div class="choice-text">${formatText(q.u_txt)}</div>
-                </div>
-                <div class="choice-block" id="blk-right">
-                    <div class="choice-label">RIGHT →</div>
-                    <div class="choice-text">${formatText(q.r_txt)}</div>
-                </div>
-            </div>
-        `;
-        document.getElementById('stack-container').appendChild(card);
-        bindPhysics(card, q);
+    function route(el, data, dir) {
+        if (MODE === "S_PATH") { SEL_PATH = (dir === "RT" ? "QUIZ_LEARN" : (dir === "LT" ? "LEARN" : (dir === "UP" ? "TEST" : "QUIZ"))); renderS1(); }
+        else if (MODE === "S_CORE") { SEL_CORE = (dir === "RT" ? "ENERGY" : (dir === "LT" ? "MATTER" : (dir === "UP" ? "CHANGE" : "ANALYSIS"))); start(); }
+        else if (MODE === "END") { location.reload(); }
+        else {
+            if (dir === "DN") {
+                if (SEL_PATH === "TEST") { el.style.transform = "none"; return; }
+                openOverlay(data); el.style.transform = "none"; return;
+            }
+            if (dir === data.ans.replace('LEFT','LT').replace('RIGHT','RT')) SCORE += 10; else MISTAKES.push(data);
+            POOL.shift(); INDEX++; renderNext();
+        }
     }
 
     function bindPhysics(el, data) {
-        let startX, startY, isDragging = false;
-        const qContainer = el.querySelector('#q-container');
-        const overlayText = el.querySelector('#overlay-main-text');
-
-        el.addEventListener('touchstart', e => { isDragging=true; startX=e.touches[0].clientX; startY=e.touches[0].clientY; el.style.transition='none'; });
-        
-        window.addEventListener('touchmove', e => {
-            if (!isDragging) return;
-            const x = e.touches[0].clientX - startX;
-            const y = e.touches[0].clientY - startY;
-            
-            // 1. ROTATION CLAMP (Max 15deg)
-            let rot = x * 0.05;
-            if (rot > 15) rot = 15; if (rot < -15) rot = -15;
-
-            el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
-            
-            // 2. FADE LOGIC
-            const dist = Math.sqrt(x*x + y*y);
-            const opacity = Math.min(dist / 120, 1);
-            
-            // Fade Out Question
-            qContainer.style.opacity = Math.max(0, 1 - (dist / 150));
-            overlayText.style.opacity = opacity;
-
-            // Reset Overlays
-            el.querySelectorAll('.overlay-bg').forEach(o => o.style.opacity = 0);
-            el.querySelectorAll('.choice-block').forEach(b => b.classList.remove('active'));
-
-            // 3. DIRECTION DETECT
-            if (y > 50 && Math.abs(x) < 80) { // DOWN
-                el.querySelector('#bg-down').style.opacity = opacity;
-                overlayText.innerText = "ANALYSIS";
-            } else if (y < -50 && Math.abs(x) < 80) { // UP
-                el.querySelector('#bg-up').style.opacity = opacity;
-                overlayText.innerHTML = formatText(data.u_txt);
-                el.querySelector('#blk-up').classList.add('active');
-            } else if (x > 50) { // RIGHT
-                el.querySelector('#bg-right').style.opacity = opacity;
-                overlayText.innerHTML = formatText(data.r_txt);
-                el.querySelector('#blk-right').classList.add('active');
-            } else if (x < -50) { // LEFT
-                el.querySelector('#bg-left').style.opacity = opacity;
-                overlayText.innerHTML = formatText(data.l_txt);
-                el.querySelector('#blk-left').classList.add('active');
+        let x=0, y=0, sx=0, sy=0, active=false, dir=null;
+        el.ontouchstart = e => { active=true; sx=e.touches[0].clientX; sy=e.touches[0].clientY; el.style.transition="none"; };
+        window.ontouchmove = e => { 
+            if (!active) return; 
+            let dx = e.touches[0].clientX-sx, dy = e.touches[0].clientY-sy; const dist = Math.sqrt(dx*dx+dy*dy);
+            x = (dist > 35) ? dx*(35/dist) : dx; y = (dist > 35) ? dy*(35/dist) : dy;
+            requestAnimationFrame(() => { if (active) el.style.transform = `translate3d(${x}px,${y}px,0) rotate(${dx/15}deg)`; });
+            el.querySelectorAll('.swipe-label').forEach(l => l.style.opacity=0);
+            if (dist > 15) {
+                const ang = Math.atan2(-dy, dx)*(180/Math.PI);
+                let d = (ang >= 45 && ang < 135) ? ".sl-up" : (ang >= 135 || ang < -135) ? ".sl-left" : (ang >= -135 && ang < -45) ? ".sl-down" : ".sl-right";
+                const t = el.querySelector(d); if (t) { t.style.opacity = 1; dir = d.replace('.sl-','').toUpperCase(); }
             }
-        });
-
-        window.addEventListener('touchend', e => {
-            if (!isDragging) return; isDragging=false;
-            const x = e.changedTouches[0].clientX-startX; const y = e.changedTouches[0].clientY-startY;
-            if (Math.sqrt(x*x+y*y)>100) {
-                if(y>50 && Math.abs(x)<80) finishSwipe(el, data, "DOWN");
-                else if(y<-50 && Math.abs(x)<80) finishSwipe(el, data, "UP");
-                else if(x>50) finishSwipe(el, data, "RIGHT");
-                else if(x<-50) finishSwipe(el, data, "LEFT");
-                else resetCard(el);
-            } else resetCard(el);
-        });
+        };
+        window.ontouchend = () => { if(!active) return; active=false; if(Math.sqrt(x*x+y*y)>25) route(el, data, dir); else { el.style.transition="0.4s ease"; el.style.transform="none"; } };
     }
 
-    function resetCard(el) { 
-        el.style.transition='transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
-        el.style.transform='translate(0,0)'; 
-        el.querySelector('#q-container').style.opacity = 1;
-        el.querySelector('#overlay-main-text').style.opacity = 0;
-        el.querySelectorAll('.overlay-bg').forEach(o => o.style.opacity = 0);
-        el.querySelectorAll('.choice-block').forEach(b => b.classList.remove('active'));
-    }
-
-    function finishSwipe(el, data, dir) {
-        const endX = dir==="RIGHT"?window.innerWidth:(dir==="LEFT"?-window.innerWidth:0);
-        const endY = dir==="UP"?-window.innerHeight:(dir==="DOWN"?window.innerHeight:0);
-        el.style.transition='transform 0.4s ease-in'; 
-        el.style.transform=`translate(${endX}px,${endY}px)`;
-
-        if(dir==="DOWN") { setTimeout(()=>{showAnalysis(data.expl); el.remove(); INDEX++; renderCard();},200); logData(data.id,"ANALYSIS","VIEW",""); }
-        else { 
-            const corr = (dir===data.actualAns); SCORE += corr?1:0; 
-            document.getElementById('score-disp').innerText = Math.round((SCORE/(INDEX+1))*100)+"% ACCURACY";
-            document.getElementById('progress').style.width = ((INDEX+1)/POOL.length)*100+"%";
-            logData(data.id,dir,corr?"CORRECT":"WRONG","");
-            setTimeout(()=>{el.remove(); INDEX++; renderCard();},300);
+    async function importDataset() {
+        const raw = document.getElementById('data-input').value.trim();
+        const btn = document.getElementById('import-btn');
+        if (!raw) return; btn.disabled = true; btn.innerText = "CHUNKING...";
+        const lines = raw.split(/\r?\n/);
+        let parsed = [];
+        for (let i = 0; i < lines.length; i++) {
+            let c = lines[i].split(/\t/);
+            if (c.length < 5) c = lines[i].split(/\s{3,}/); 
+            if (c.length >= 9 && c[0].toLowerCase() !== "id") {
+                parsed.push({ id: c[0], set: c[1], dom: c[2], dep: c[3], q: c[4], u: c[5], r: c[6], l: c[7], ans: c[8], expl: c[9]||"---", hint: c[10]||"---", context: c[11]||"---" });
+            }
+            if (i % 500 === 0) await new Promise(r => setTimeout(r, 0));
         }
+        const topicName = parsed[0].set || `VAULT_${Date.now().toString().slice(-4)}`;
+        db.transaction([STORE_NAME], "readwrite").objectStore(STORE_NAME).put(parsed, topicName);
+        location.reload();
     }
 
-    function showAnalysis(t) { document.getElementById('modal-text').innerHTML = `<strong>INSIGHT</strong><br><br>${formatText(t)}`; document.getElementById('analysis-modal').classList.add('open'); }
-    function closeModal() { document.getElementById('analysis-modal').classList.remove('open'); }
-    
-    function logData(qid, act, res, conc) {
-        document.getElementById('sync-dot').classList.add('active'); setTimeout(()=>document.getElementById('sync-dot').classList.remove('active'),500);
-        if(BACKEND_URL) fetch(BACKEND_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify({session_id:SESSION_ID, question_id:qid, action:act, result:res, device:navigator.platform, conclusion:conc}) });
-    }
-
-    function renderEnd() {
-        let pct = Math.round((SCORE/POOL.length)*100);
-        let v = pct>=90?"OUTSTANDING":pct>=70?"STRONG":pct>=50?"AVERAGE":"NEEDS WORK";
-        logData("SUMMARY","END",pct+"%",v);
-        document.getElementById('stack-container').innerHTML = `<div class="card" style="justify-content:center;"><div style="color:var(--accent);font-size:3rem;">✓</div><div class="card-q">SESSION COMPLETE</div><h2 style="color:#fff;">${v}</h2><p>Accuracy: ${pct}%</p><button class="modal-btn" onclick="exitSession()">RETURN TO LIBRARY</button></div>`;
-    }
-
-    async function importDataset() { 
-        const r=document.getElementById('data-input').value.trim(); if(!r)return; 
-        const l=r.split(/\r?\n/); let p=[]; 
-        for(let i=0;i<l.length;i++){ let c=l[i].split(/\t/); if(c.length>=8 && c[0]!=="ID") p.push({id:c[0], set:c[1], dom:c[2], q:c[4], u:c[5], r:c[6], l:c[7], ans:c[8], expl:c[9]||""}); }
-        if(p.length){ 
-            const tx = db.transaction([STORE_NAME],"readwrite"); 
-            tx.objectStore(STORE_NAME).put(p, p[0].set); 
-            tx.oncomplete = () => { alert("Imported!"); document.getElementById('data-input').value=""; refreshLibrary(); }
-        }
-    }
-    function clearLibrary() { if(confirm("Reset Everything?")) { indexedDB.deleteDatabase(DB_NAME); location.reload(); } }
+    function openOverlay(d) { document.getElementById('overlay-content').innerHTML = `<strong>LOGIC</strong><br>${format(d.expl)}<br><br><strong>CONTEXT</strong><br>${format(d.context)}`; document.getElementById('global-overlay').classList.add('active'); }
+    function closeOverlay() { document.getElementById('global-overlay').classList.remove('active'); }
+    function clearLibrary() { if(confirm("Purge Library?")) { db.transaction([STORE_NAME], "readwrite").objectStore(STORE_NAME).clear(); refreshLibrary(); } }
+    const format = (t) => t ? t.toString().replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>').replace(/Delta/g,'&Delta;') : "";
+    function updateHUD() { document.getElementById('p-text').innerText = `${INDEX}/20`; document.getElementById('score-text').innerText = `${SCORE} XP`; document.getElementById('progress-bar').style.width = `${(INDEX/20)*100}%`; }
+    function renderEnd() { document.getElementById('stack').innerHTML = `<div class='card'><div class='card-q'>MISSION COMPLETE</div><div class='swipe-label sl-up'>RESTART</div><div class='swipe-label sl-left'>VAULT</div></div>`; bindPhysics(document.querySelector('.card'), {}); MODE="END"; }
 </script>
 </body>
 </html>
