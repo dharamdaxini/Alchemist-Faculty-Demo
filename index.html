@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | FACULTY MASTER</title>
+    <title>ALCHEMIST | MASTER UI</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +19,7 @@
             --text-sub: #999;           
             --green: #2ecc71;           
             --red: #e74c3c;             
+            --blue: #3498db;            /* Added for 3rd Option (Up) */
             --font-book: 'Crimson Pro', serif;       
             --font-head: 'Libre Baskerville', serif; 
             --font-ui: 'Inter', sans-serif;          
@@ -31,46 +32,25 @@
             font-family: var(--font-ui); overflow: hidden; display: flex; flex-direction: column; 
         }
 
-        /* --- VIEW: PORTAL (LIBRARY) --- */
+        /* --- PORTAL VIEW --- */
         #portal { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; }
-        
         .portal-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
         .app-title { font-family: var(--font-head); font-size: 1.5rem; color: var(--accent); letter-spacing: 1px; margin-bottom: 5px; }
-        .app-subtitle { font-family: var(--font-code); font-size: 0.65rem; color: #666; letter-spacing: 2px; text-transform: uppercase; }
-
         .section-label { font-family: var(--font-code); font-size: 0.6rem; color: #555; margin: 25px 0 10px; letter-spacing: 1.5px; text-transform: uppercase; display: block; }
-        
-        #library { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 30px; }
-        
-        .topic-tile { 
-            background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 12px; 
-            transition: 0.2s; position: relative; overflow: hidden; min-height: 100px; display: flex; flex-direction: column; justify-content: center;
-        }
+        #library { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .topic-tile { background: var(--card-bg); border: 1px solid var(--border); padding: 16px; border-radius: 12px; transition: 0.2s; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
         .topic-tile:active { transform: scale(0.98); background: #1a1a1a; }
-        .topic-tile.locked { opacity: 0.7; border-color: var(--red); }
-        
-        .topic-name { color: var(--text-main); font-weight: 700; font-size: 1rem; display: block; margin-bottom: 6px; font-family: var(--font-head); }
-        .topic-meta { color: var(--accent); font-size: 0.65rem; font-family: var(--font-code); opacity: 0.8; }
-        
-        .lock-icon { 
-            position: absolute; top: 0; right: 0; background: var(--red); color: #fff; 
-            font-size: 0.6rem; padding: 3px 8px; border-bottom-left-radius: 8px; font-weight: 800; display: none; 
-        }
-        .topic-tile.locked .lock-icon { display: block; }
-
-        /* IMPORT TOOLS */
+        .topic-name { color: var(--text-main); font-weight: 700; font-size: 0.85rem; display: block; margin-bottom: 6px; font-family: var(--font-ui); }
+        .topic-meta { color: var(--accent); font-size: 0.6rem; font-family: var(--font-code); opacity: 0.8; }
         textarea { width: 100%; height: 100px; background: #111; border: 1px solid #333; color: var(--green); font-family: var(--font-code); padding: 12px; border-radius: 8px; font-size: 0.7rem; margin-bottom: 10px; }
         .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; background: #fff; color: #000; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; font-family: var(--font-ui); letter-spacing: 1px; margin-bottom: 8px; }
         .btn-gold { background: var(--accent); color: #000; }
         .btn-dark { background: #222; color: #888; border: 1px solid #333; }
 
-        /* --- VIEW: SESSION (CARDS) --- */
+        /* --- SESSION VIEW --- */
         #session-view { display: none; flex-direction: column; height: 100vh; }
-
-        #header { 
-            width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; 
-            padding: 0 24px; z-index: 1000; background: linear-gradient(to bottom, rgba(8,8,8,1) 0%, rgba(8,8,8,0) 100%);
-        }
+        #header { width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; background: linear-gradient(to bottom, rgba(8,8,8,1) 0%, rgba(8,8,8,0) 100%); }
+        .brand { font-family: var(--font-ui); font-size: 0.8rem; color: #666; font-weight: 600; }
         .stat-pill { background: rgba(255,255,255,0.06); padding: 6px 16px; border-radius: 4px; font-size: 0.7rem; border: 1px solid rgba(255,255,255,0.1); font-weight: 600; letter-spacing: 1px; backdrop-filter: blur(4px); font-family: var(--font-code); }
         .sync-pulse { width: 6px; height: 6px; background: var(--green); border-radius: 50%; opacity: 0; transition: opacity 0.5s ease; box-shadow: 0 0 8px var(--green); }
         .sync-pulse.active { opacity: 1; }
@@ -78,11 +58,11 @@
         #stack-container { position: relative; flex-grow: 1; display: flex; align-items: center; justify-content: center; perspective: 1200px; overflow: visible; }
 
         .card { 
-            position: absolute; width: 90%; max-width: 380px; height: 65vh; max-height: 600px;
-            background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); 
+            position: absolute; width: 90%; max-width: 380px; height: 70vh; max-height: 650px;
+            background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); 
             display: flex; flex-direction: column; 
-            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.7); 
-            transform-origin: 50% 120%; will-change: transform; overflow: hidden;
+            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8); 
+            transform-origin: 50% 120%; will-change: transform, opacity; overflow: hidden;
         }
         /* Paper Texture */
         .card::before {
@@ -91,37 +71,62 @@
             pointer-events: none; opacity: 0.5;
         }
 
-        .card-top { padding: 32px 32px 0 32px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 2; }
-        .card-bottom { height: 150px; border-top: 1px solid #222; display: flex; position: relative; background: #0c0c0c; flex-shrink: 0; z-index: 2; }
-        .card-meta { font-family: var(--font-code); font-size: 0.6rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px; opacity: 0.8; }
-        .card-q { font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.1rem); line-height: 1.35; color: #fff; font-weight: 400; margin-bottom: 10px; }
+        .card-top { padding: 32px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 2; transition: opacity 0.2s; }
         
-        /* Math/Chem Formatting */
-        sub { font-size: 0.6em; vertical-align: -0.25em; }
-        sup { font-size: 0.6em; vertical-align: 0.35em; }
-        i { font-family: var(--font-book); font-style: italic; }
+        /* THE TRINITY DOCK (3 OPTIONS) */
+        .card-bottom { 
+            height: 140px; border-top: 1px solid #222; display: flex; position: relative; 
+            background: #0e0e0e; flex-shrink: 0; z-index: 2; 
+        }
+
+        .card-meta { font-family: var(--font-code); font-size: 0.6rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px; opacity: 0.8; }
+        .card-q { font-family: var(--font-book); font-size: clamp(1.5rem, 4.5vmin, 2rem); line-height: 1.35; color: #fff; font-weight: 400; }
 
         /* CHOICE BLOCKS */
-        .choice-block { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 5px; transition: 0.2s; overflow: hidden; position: relative; }
-        .choice-block:first-child { border-right: 1px solid #222; }
-        .choice-label { font-size: 0.6rem; color: #555; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1.5px; font-weight: 700; font-family: var(--font-ui); }
-        .choice-text { font-family: var(--font-book); font-size: 1.25rem; color: #eee; font-weight: 400; text-align: center; line-height: 1.2; padding: 0 4px; }
-        .hint-pill { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #1a1a1a; border: 1px solid #333; padding: 4px 14px; border-radius: 4px; font-size: 0.6rem; color: #888; text-transform: uppercase; letter-spacing: 1px; z-index: 10; font-family: var(--font-ui); font-weight: 600; }
+        .choice-block { 
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            padding: 10px 5px; overflow: hidden; position: relative; 
+            border-right: 1px solid #1a1a1a;
+        }
+        .choice-block:last-child { border-right: none; }
+        
+        .choice-label { font-size: 0.55rem; color: #444; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; font-family: var(--font-ui); }
+        .choice-text { 
+            font-family: var(--font-book); font-size: 1rem; color: #bbb; font-weight: 400; text-align: center; line-height: 1.1; 
+            opacity: 0.8; transition: opacity 0.2s;
+        }
 
-        .card-dummy { z-index: -1; background: #181818; transform: scale(0.96) translateY(12px); opacity: 0.6; border-color: #222; border-radius: 12px; }
-        .card-dummy-2 { z-index: -2; background: #202020; transform: scale(0.92) translateY(24px); opacity: 0.3; border-color: #1a1a1a; border-radius: 12px; }
+        /* Highlight classes for drag */
+        .choice-block.active .choice-text { color: #fff; opacity: 1; transform: scale(1.05); }
 
-        .overlay-label { position: absolute; inset: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--font-ui); font-weight: 800; font-size: clamp(1.2rem, 4vmin, 1.6rem); text-align: center; padding: 40px; opacity: 0; transition: opacity 0.1s; pointer-events: none; backdrop-filter: blur(8px); z-index: 20; white-space: normal; word-wrap: break-word; line-height: 1.4; letter-spacing: 1px; }
-        .overlay-right { background: rgba(46, 204, 113, 0.9); color: #000; border: 4px solid var(--green); }
-        .overlay-left { background: rgba(231, 76, 60, 0.9); color: #fff; border: 4px solid var(--red); }
-        .overlay-down { background: rgba(212, 175, 55, 0.9); color: #000; border: 4px solid var(--accent); }
+        .card-dummy { z-index: -1; background: #181818; transform: scale(0.96) translateY(12px); opacity: 0.6; border-color: #222; border-radius: 16px; }
+        .card-dummy-2 { z-index: -2; background: #202020; transform: scale(0.92) translateY(24px); opacity: 0.3; border-color: #1a1a1a; border-radius: 16px; }
+
+        /* NATURAL OVERLAYS (Ink Wash) */
+        .overlay-bg {
+            position: absolute; inset: 0; 
+            z-index: 10; opacity: 0; transition: opacity 0.1s; pointer-events: none;
+            mix-blend-mode: soft-light; /* Natural blend */
+        }
+        .overlay-right-bg { background: var(--green); }
+        .overlay-left-bg { background: var(--red); }
+        .overlay-up-bg { background: var(--blue); } /* Blue for the 3rd option */
+        .overlay-down-bg { background: var(--accent); } /* Gold for Analysis */
+
+        /* OVERLAY TEXT (Big Labels) */
+        .overlay-text {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; text-align: center;
+            font-family: var(--font-ui); font-weight: 800; font-size: 1.4rem;
+            color: #fff; z-index: 20; opacity: 0; pointer-events: none;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
 
         /* MODALS */
-        #analysis-modal, #gatekeeper-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 5000; display: none; flex-direction: column; padding: 30px; opacity: 0; transition: opacity 0.25s ease; }
-        #analysis-modal.open, #gatekeeper-modal.open { display: flex; opacity: 1; }
-        .modal-content { flex: 1; display: flex; flex-direction: column; justify-content: center; color: #dcdcdc; line-height: 1.8; font-size: 1.25rem; text-align: left; font-family: var(--font-book); }
+        #analysis-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 5000; display: none; flex-direction: column; padding: 30px; opacity: 0; transition: opacity 0.25s ease; }
+        #analysis-modal.open { display: flex; opacity: 1; }
+        .modal-content { flex: 1; display: flex; flex-direction: column; justify-content: center; color: #dcdcdc; line-height: 1.8; font-size: 1.25rem; font-family: var(--font-book); }
         .modal-btn { background: var(--accent); color: #050505; border: none; padding: 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-top: 20px; text-transform: uppercase; letter-spacing: 1.5px; font-family: var(--font-ui); }
-        .modal-btn-wa { background: #25D366; color: #fff; margin-top: 10px; }
 
         .progress-line { position: fixed; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.4s; }
     </style>
@@ -131,13 +136,9 @@
     <div id="portal">
         <div class="portal-header">
             <div class="app-title">Alchemist</div>
-            <div class="app-subtitle">Faculty Master</div>
+            <div class="section-label">Master Edition V140</div>
         </div>
-        
-        <div class="section-label">Your Libraries</div>
-        <div id="library">
-            </div>
-
+        <div id="library"></div>
         <div style="margin-top:auto;">
             <div class="section-label">System Tools</div>
             <textarea id="data-input" placeholder="Paste TSV Data..."></textarea>
@@ -148,7 +149,7 @@
 
     <div id="session-view">
         <div id="header">
-            <div class="brand" onclick="exitSession()">← Library</div>
+            <div class="brand" onclick="exitSession()">← LIBRARY</div>
             <div style="display:flex; gap:10px; align-items:center;">
                 <div class="stat-pill" id="score-disp">0% ACCURACY</div>
                 <div class="sync-pulse" id="sync-dot"></div>
@@ -167,166 +168,72 @@
         <button class="modal-btn" onclick="closeModal()">CONTINUE</button>
     </div>
 
-    <div id="gatekeeper-modal">
-        <div class="modal-content" style="text-align:center;">
-            <div style="font-size:3rem; margin-bottom:20px;">🔒</div>
-            <h2 style="font-family:var(--font-head); color:var(--accent); margin:0;">Premium Vault</h2>
-            <p style="font-size:1rem; color:#888;">This content requires a license key.</p>
-        </div>
-        <button class="modal-btn" onclick="enterKey()">Enter Key</button>
-        <button class="modal-btn modal-btn-wa" onclick="contactAdmin()">Get Key via WhatsApp</button>
-        <button class="btn btn-dark" onclick="closeGatekeeper()" style="margin-top:20px;">Cancel</button>
-    </div>
-
 <script>
-    // --- 1. CONFIGURATION ---
+    // --- CONFIG ---
+    // Updated Deployment ID
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
-    const ADMIN_PHONE = "919876543210"; // Update this
-    const PREMIUM_PREFIXES = ["SET_PREMIUM"]; // Only lock specific premium sets if needed
-    const SALT = "ALCHEMIST_MASTER";
-    
-    // DB & State
-    let db, SESSION_ID;
-    const DB_NAME = "AlchemistMasterDB", STORE_NAME = "Vaults";
-    let INDEX = 0, SCORE = 0, POOL = [], CURRENT_VAULT = "";
+    const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
+    let db, INDEX = 0, SCORE = 0, POOL = [];
+    const DB_NAME = "AlchemistDB_V140", STORE_NAME = "Vaults";
 
-    // --- 2. FACULTY DATASET (The 30 Questions provided as TSV String) ---
-    // Note: Converted to JSON for embedding, but typically loaded via Import
-    const FACULTY_RAW_TSV = `ID\tSET\tDOM\tDEP\tQUESTION\tUP_OPT\tRIGHT_OPT\tLEFT_OPT\tCORRECT\tANALYSIS\tHINT\tCONTEXT
-FAC_01\tFACULTY_DEMO\tTHERMO\tMATH\tWhat is the relationship between Kp and Kc for: N2(g) + 3H2(g) <=> 2NH3(g)?\tKp = Kc(RT)\tKp = Kc(RT)^-2\tKp = Kc(RT)^2\tRIGHT\t❌ (RT) assumes Delta n = 1. || ✅ Delta n = (moles gas prod) - (moles gas react) = 2 - 4 = -2. Thus Kp = Kc(RT)^-2.\tCount gas moles.\tVan't Hoff Equation
-FAC_02\tFACULTY_DEMO\tKINETIC\tMATH\tIf activation energy (Ea) is 50 kJ/mol, by what factor does rate increase from 300K to 310K?\t~1.5x\t~2.0x\t~3.0x\tRIGHT\t❌ 1.5 is too low for 50kJ. || ✅ Using ln(k2/k1) = (Ea/R)(1/T1 - 1/T2), the ratio is approx 1.95, roughly 2.\tArrhenius factor.\tArrhenius Equation
-FAC_03\tFACULTY_DEMO\tQUANTUM\tMATH\tEnergy of a particle in a 1D box (length L) in the second excited state (n=3)?\th^2 / 8mL^2\t9h^2 / 8mL^2\t4h^2 / 8mL^2\tRIGHT\t❌ n=1 is ground. n=2 is 1st excited. || ✅ Second excited state means n=3. E = (n^2 * h^2) / (8mL^2).\tn=3 square it.\tSchrodinger Equation
-FAC_04\tFACULTY_DEMO\tANALYT\tMATH\tIn HPLC, if tR = 5 min and w = 0.5 min, calculate theoretical plates (N).\t1600\t1600\t100\tRIGHT\t❌ 100 is too low. || ✅ N = 16 * (tR / w)^2 = 16 * (5 / 0.5)^2 = 16 * 100 = 1600.\tPlate count square.\tChromatography Efficiency
-FAC_05\tFACULTY_DEMO\tINORG\tMATH\tCalculate CFSE for a d6 high-spin octahedral complex.\t-2.4 Delta_o\t-0.4 Delta_o\t0 Delta_o\tRIGHT\t❌ -2.4 is low spin. || ✅ High spin d6: (t2g)4 (eg)2. CFSE = [4*(-0.4) + 2*(0.6)] = -0.4 Delta_o.\tSplit the electrons.\tCrystal Field Theory
-FAC_06\tFACULTY_DEMO\tORGANIC\tMATH\tHow many 1H NMR signals are in 1,2-dichloroethane?\t2\t1\t4\tRIGHT\t❌ 2 implies asymmetry. || ✅ All 4 hydrogens are chemically and magnetically equivalent due to symmetry. Total = 1 signal.\tSymmetry equivalence.\tNMR Spectroscopy
-FAC_07\tFACULTY_DEMO\tTHERMO\tMATH\tIonic strength (I) of 0.1 M Na2SO4 solution?\t0.1 M\t0.3 M\t0.2 M\tRIGHT\t❌ 0.1 M is for 1:1 salt. || ✅ I = 0.5 * sum(ci * zi^2) = 0.5 * (0.2*1^2 + 0.1*2^2) = 0.3 M.\tSum of charges sq.\tDebye-Huckel Theory
-FAC_08\tFACULTY_DEMO\tQUANTUM\tMATH\tUncertainty in velocity (Delta v) if Delta x = 1.0 Angstrom for an electron?\t5.8e5 m/s\t5.8e5 m/s\t1.0e6 m/s\tRIGHT\t❌ 1.0e6 is a guess. || ✅ Delta v = h / (4pi * m * Delta x). Calculation yields ~5.8e5 m/s.\tHeisenberg math.\tUncertainty Principle
-FAC_09\tFACULTY_DEMO\tANALYT\tMATH\tPeak separation (Delta Ep) for a reversible 1-electron CV transfer?\t29 mV\t59 mV\t0 mV\tRIGHT\t❌ 29 mV is for n=2. || ✅ For a reversible Nernstian couple, Delta Ep = 59/n mV at 25C.\tThe 59/n rule.\tCyclic Voltammetry
-FAC_10\tFACULTY_DEMO\tINORG\tMATH\tSpin-only magnetic moment for Co2+ (d7) in tetrahedral field?\t1.73 BM\t3.87 BM\t4.90 BM\tRIGHT\t❌ 4.90 is d6. || ✅ Co2+ (d7) tetrahedral is high spin (e4 t2 3). 3 unpaired e-. sqrt(3*5) = 3.87 BM.\tTetrahedral flip.\tMagnetochemistry
-FAC_11\tFACULTY_DEMO\tORGANIC\tMATH\tDegree of unsaturation (DoU) for C6H10O?\t1\t2\t3\tRIGHT\t❌ 1 is for C6H12. || ✅ DoU = C + 1 - H/2 = 6 + 1 - 5 = 2. (Could be 2 rings, 2 pi bonds).\tMissing Hydrogens.\tFormula Analysis
-FAC_12\tFACULTY_DEMO\tKINETIC\tMATH\tFor 2nd order (A->P), t=20min for 1.0M to 0.5M. Time to drop 0.5M to 0.25M?\t20 min\t40 min\t60 min\tRIGHT\t❌ 20 min is 1st order. || ✅ In 2nd order, half-life doubles as concentration halves. 20 * 2 = 40 min.\tHalf-life doubles.\tIntegrated Rate Laws
-FAC_13\tFACULTY_DEMO\tSTATMEC\tMATH\tRotational partition function (qr) for heteronuclear diatomic at high T?\tkT / hB\tkT / hcB\tkT / 2hcB\tRIGHT\t❌ 2hcB is homonuclear. || ✅ For sigma=1 (heteronuclear), qr = kT / hcB.\tSigma is 1.\tPartition Functions
-FAC_14\tFACULTY_DEMO\tINORG\tLOGIC\tWhy is 'Trans Influence' strong for high pi-acidity ligands?\tDonates electrons\tWeakens trans bond via d-orbital competition\tIt is steric\tRIGHT\t❌ Sterics are secondary. || ✅ They withdraw density from the same metal d-orbitals used by the trans ligand, weakening its bond.\tOrbital competition.\tTrans Effect
-FAC_15\tFACULTY_DEMO\tORGANIC\tLOGIC\tIn 'Robinson Annulation', what are the two sequential reactions?\tAldol + Wittig\tMichael + Aldol\tMichael + Claisen\tRIGHT\t❌ Wittig makes alkenes. || ✅ It begins with a Michael addition followed by an intramolecular Aldol condensation.\tMichael-Aldol combo.\tRing Formation
-FAC_16\tFACULTY_DEMO\tQUANTUM\tLOGIC\tPhysical origin of 'Exchange Energy' in multi-electron systems?\tCoulomb only\tPauli Principle + Coulomb repulsion\tGravity\tRIGHT\t❌ Gravity is weak. || ✅ Antisymmetry keeps same-spin electrons apart (Fermi Hole), reducing their Coulomb repulsion.\tFermi Hole.\tHartree-Fock
-FAC_17\tFACULTY_DEMO\tANALYT\tLOGIC\tWhy use 'Internal Standard' in quantitative GC?\tClean syringe\tAccount for injection volume variation\tLower BP\tRIGHT\t❌ Syringes are cleaned manually. || ✅ It compensates for human error in injection volume or instrument drift.\tRatio correction.\tQuantitative GC
-FAC_18\tFACULTY_DEMO\tTHERMO\tLOGIC\tWhat implies a 'Negative' Volume of Activation (Delta V++)?\tSlower at high P\tFaster at high P\tNo change\tRIGHT\t❌ Positive Delta V++ means high P slows rate. || ✅ Negative means the Transition State is more compact, so Pressure accelerates it.\tCompression helps.\tTransition State Theory
-FAC_19\tFACULTY_DEMO\tINORG\tLOGIC\tWhy 'Inverse' Spinel for Fe3O4?\tLattice Energy\tCFSE of Fe(II) vs Fe(III)\tSize mismatch\tRIGHT\t❌ Lattice is similar. || ✅ Fe(III) is d5 (0 CFSE). Fe(II) is d6 and gains stability in the octahedral B-site.\tSite preference.\tSolid State Chem
-FAC_20\tFACULTY_DEMO\tORGANIC\tLOGIC\t'Endo' selectivity in Diels-Alder is due to?\tSterics\tSecondary Orbital Interactions\tEntropy\tRIGHT\t❌ Endo is often more crowded. || ✅ Overlap between the pi-system of the substituent and the diene stabilizes the endo TS.\tPi-overlap.\tFrontier Orbitals
-FAC_21\tFACULTY_DEMO\tKINETIC\tLOGIC\t'Steady-State Approximation' implies?\tConcentration = 0\tRate of formation = Rate of loss\tTime = infinity\tRIGHT\t❌ Conc is small, not zero. || ✅ It assumes d[I]/dt = 0 for highly reactive intermediates.\tFlux balance.\tReaction Mechanisms
-FAC_22\tFACULTY_DEMO\tANALYT\tLOGIC\tWhy use 'Deuterated' solvent in NMR?\tSolubility\tAvoid solvent signal interference\tCooling\tRIGHT\t❌ Solubility is same. || ✅ Deuterium resonates at a different frequency, making the solvent 'invisible' in 1H NMR.\tInvisible solvent.\tNMR Technique
-FAC_23\tFACULTY_DEMO\tLAB\tPRAC\tPrimary risk of heating a 'Closed System'?\tSolvent loss\tExplosion\tSlow reaction\tRIGHT\t❌ Closed prevents loss. || ✅ PV=nRT. increasing T in fixed V causes massive P increase -> Explosion.\tPressure bomb.\tLab Safety
-FAC_24\tFACULTY_DEMO\tLAB\tPRAC\tWhy 'Acid to Water' during dilution?\tBetter mixing\tHeat dissipation (Safety)\tReaction speed\tRIGHT\t❌ Water to acid causes boiling/splashing. || ✅ High heat capacity of water absorbs the exothermic energy safely.\tAA (Add Acid).\tLab Safety
-FAC_25\tFACULTY_DEMO\tLAB\tPRAC\tFunction of 'Boric Acid' in Kjeldahl method?\tDigest protein\tTrap distilled ammonia\tCatalyst\tRIGHT\t❌ Digestion uses H2SO4. || ✅ Ammonia distilled is captured in boric acid to form ammonium borate for titration.\tAmmonia trap.\tAnalytical Lab
-FAC_26\tFACULTY_DEMO\tQUANTUM\tLOGIC\t'Born-Oppenheimer' approx fails when?\tMass is high\tEnergy surfaces touch (Conical Intersection)\tRelativistic\tRIGHT\t❌ Mass usually justifies it. || ✅ When energy gap vanishes, nuclear and electronic timescales mix.\tSurfaces touch.\tNon-adiabatic dynamics
-FAC_27\tFACULTY_DEMO\tTHERMO\tLOGIC\t'Critical Opalescence' is caused by?\tSolidification\tDensity fluctuations scattering light\tAbsorption\tRIGHT\t❌ Fluid remains fluid. || ✅ Near critical point, density fluctuations match light wavelength -> scattering.\tFluctuation scattering.\tPhase Transitions
-FAC_28\tFACULTY_DEMO\tINORG\tLOGIC\t'Jahn-Teller' distortion in d9 octahedral?\tIncrease symmetry\tRemove degeneracy / Lower energy\tSterics\tRIGHT\t❌ It lowers symmetry (Oh to D4h). || ✅ Distorting splits the degenerate levels, putting the odd electron in a lower energy orbital.\tSplit to save.\tElectronic Structure
-FAC_29\tFACULTY_DEMO\tORGANIC\tLOGIC\t'Favorskii' rearrangement mechanism?\tRadical\tConcerted cyclopropanone formation\tCarbocation\tRIGHT\t❌ Radical is different. || ✅ Base removes alpha-H, forming a cyclopropanone intermediate via internal SN2.\t3-membered ring.\tMechanisms
-FAC_30\tFACULTY_DEMO\tSTATMEC\tLOGIC\t'Ergodicity' means?\tHigh entropy\tTime average = Ensemble average\tChaos\tRIGHT\t❌ Chaos is different. || ✅ The system visits all possible states over time, so one trace represents the whole group.\tSampling everything.\tStatistical Mechanics`;
+    // DEMO DATA (For testing)
+    const DEMO_DATA = [
+        {id:"FAC_01", set:"FACULTY_DEMO", dom:"THERMO", q:"Relationship between Kp and Kc for N2 + 3H2 <=> 2NH3?", u:"Kp = Kc(RT)", r:"Kp = Kc(RT)^-2", l:"Kp = Kc(RT)^2", ans:"RIGHT", expl:"Delta n = -2. Thus Kp = Kc(RT)^-2."},
+        {id:"FAC_02", set:"FACULTY_DEMO", dom:"KINETIC", q:"If Ea = 50 kJ/mol, rate increase from 300K to 310K?", u:"1.5x", r:"~2.0x", l:"3.0x", ans:"RIGHT", expl:"Using Arrhenius eq, ln(k2/k1) approx 0.693."},
+        {id:"FAC_03", set:"FACULTY_DEMO", dom:"QUANTUM", q:"Energy of 1D box particle in 2nd excited state (n=3)?", u:"h^2/8mL^2", r:"9h^2/8mL^2", l:"4h^2/8mL^2", ans:"RIGHT", expl:"E scales with n^2. 2nd excited is n=3. 3^2=9."}
+    ];
 
-    // --- 3. INIT & DB ---
+    // --- DB INIT ---
     const request = indexedDB.open(DB_NAME, 1);
     request.onupgradeneeded = e => { db = e.target.result; db.createObjectStore(STORE_NAME); };
     request.onsuccess = e => { 
         db = e.target.result; 
-        initVaults();
+        // Auto-load Demo
+        const tx = db.transaction([STORE_NAME], "readonly");
+        const count = tx.objectStore(STORE_NAME).count();
+        count.onsuccess = () => {
+            if(count.result === 0) {
+                const wTx = db.transaction([STORE_NAME], "readwrite");
+                wTx.objectStore(STORE_NAME).put(DEMO_DATA, "FACULTY_DEMO");
+                wTx.oncomplete = refreshLibrary;
+            } else refreshLibrary();
+        }
     };
 
-    function initVaults() {
-        // Parse CSV
-        const rows = FACULTY_RAW_TSV.split(/\n/);
-        const demoData = [];
-        const chemData = [];
-
-        for(let i=1; i<rows.length; i++) {
-            const c = rows[i].split(/\t/);
-            if(c.length >= 8) {
-                const obj = {id:c[0], set:c[1], dom:c[2], q:c[4], u:c[5], r:c[6], l:c[7], ans:c[8], expl:c[9]||""};
-                // Vault 1: Demo
-                demoData.push(obj);
-                // Vault 2: Chemistry Master (Same data for now, but conceptualized as full library)
-                chemData.push({...obj, set: "CHEM_MASTER"});
-            }
-        }
-
-        const tx = db.transaction([STORE_NAME], "readwrite");
-        const store = tx.objectStore(STORE_NAME);
-        
-        // 1. Faculty Demo Vault (Overwrite to ensure latest)
-        store.put(demoData, "Faculty Demo");
-        // 2. Chemistry Master Vault (Unlocked)
-        store.put(chemData, "Chemistry - All Topics");
-
-        tx.oncomplete = refreshLibrary;
-    }
-
-    // --- 4. LIBRARY LOGIC ---
     function refreshLibrary() {
-        const store = db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME);
-        const container = document.getElementById('library');
-        container.innerHTML = "";
-        
-        store.openCursor().onsuccess = e => {
+        const container = document.getElementById('library'); container.innerHTML = "";
+        db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME).openCursor().onsuccess = e => {
             const cursor = e.target.result;
             if (cursor) {
-                // Logic: A-F sets in "Chemistry - All Topics" are free. 
-                // Only specific prefixes defined in PREMIUM_PREFIXES are locked.
-                const isPremium = PREMIUM_PREFIXES.some(p => cursor.key.startsWith(p));
-                const isUnlocked = localStorage.getItem(`UNLOCK_${cursor.key}`) === "TRUE";
-                const locked = isPremium && !isUnlocked;
-
                 const div = document.createElement('div');
-                div.className = `topic-tile ${locked ? 'locked' : ''}`;
-                div.onclick = () => handleVaultClick(cursor.key, locked);
-                div.innerHTML = `
-                    <span class="topic-name">${cursor.key}</span>
-                    <span class="topic-meta">${cursor.value.length} CARDS • UNLOCKED</span>
-                    <span class="lock-icon">LOCKED</span>
-                `;
+                div.className = "topic-tile";
+                div.onclick = () => startSession(cursor.key);
+                div.innerHTML = `<span class="topic-name">${cursor.key}</span><span class="topic-meta">${cursor.value.length} CARDS</span>`;
                 container.appendChild(div);
                 cursor.continue();
             }
         };
     }
 
-    function handleVaultClick(key, locked) {
-        if (locked) {
-            CURRENT_VAULT = key;
-            document.getElementById('gatekeeper-modal').classList.add('open');
-        } else {
-            startSession(key);
-        }
+    // --- TYPESETTER ---
+    function formatText(t) {
+        if(!t) return "";
+        t = t.replace(/\bKp\b/g, '<i>K</i><sub>p</sub>').replace(/\bKc\b/g, '<i>K</i><sub>c</sub>').replace(/\bDelta\b/g, 'Δ');
+        t = t.replace(/<=>/g, '⇌').replace(/->/g, '→').replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>').replace(/\^(\-?\d+)/g, '<sup>$1</sup>');
+        return t;
     }
 
-    // --- 5. GATEKEEPER LOGIC ---
-    function enterKey() {
-        const key = prompt("Enter License Key:");
-        const expected = btoa(CURRENT_VAULT + "_" + SALT);
-        if (key && key.trim() === expected) {
-            localStorage.setItem(`UNLOCK_${CURRENT_VAULT}`, "TRUE");
-            alert("Unlocked!");
-            closeGatekeeper();
-            refreshLibrary();
-        } else {
-            alert("Invalid Key");
-        }
-    }
-    function contactAdmin() { window.open(`https://wa.me/${ADMIN_PHONE}?text=Unlock ${CURRENT_VAULT}`, '_blank'); }
-    function closeGatekeeper() { document.getElementById('gatekeeper-modal').classList.remove('open'); }
-
-    // --- 6. SESSION ENGINE ---
+    // --- SESSION ---
     function startSession(key) {
         db.transaction([STORE_NAME], "readonly").objectStore(STORE_NAME).get(key).onsuccess = e => {
             let data = e.target.result;
-            
-            // FISHER-YATES SHUFFLE
+            // SHUFFLE POOL
             POOL = [...data];
             for (let i = POOL.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [POOL[i], POOL[j]] = [POOL[j], POOL[i]];
             }
-            
-            INDEX = 0; SCORE = 0; SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
+            INDEX = 0; SCORE = 0;
             document.getElementById('portal').style.display = 'none';
             document.getElementById('session-view').style.display = 'flex';
             renderCard();
@@ -337,23 +244,13 @@ FAC_30\tFACULTY_DEMO\tSTATMEC\tLOGIC\t'Ergodicity' means?\tHigh entropy\tTime av
     function exitSession() {
         document.getElementById('session-view').style.display = 'none';
         document.getElementById('portal').style.display = 'flex';
-        refreshLibrary();
-    }
-
-    // --- 7. TYPESETTER & RENDER ---
-    function formatText(text) {
-        if(!text) return "";
-        let t = text;
-        t = t.replace(/\bKp\b/g, '<i>K</i><sub>p</sub>').replace(/\bKc\b/g, '<i>K</i><sub>c</sub>').replace(/\bEa\b/g, '<i>E</i><sub>a</sub>').replace(/\bDelta\b/g, 'Δ');
-        t = t.replace(/<=>/g, '⇌').replace(/->/g, '→');
-        t = t.replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>'); // Formulas
-        t = t.replace(/\^(\-?\d+)/g, '<sup>$1</sup>'); // Exponents
-        return t;
     }
 
     function renderCard() {
         if (INDEX >= POOL.length) { renderEnd(); return; }
         const q = POOL[INDEX];
+        
+        // SHUFFLE OPTIONS
         const opts = [
             { txt: q.u, isCorrect: q.ans === "UP", dir: "UP" },
             { txt: q.r, isCorrect: q.ans === "RIGHT", dir: "RIGHT" },
@@ -370,61 +267,114 @@ FAC_30\tFACULTY_DEMO\tSTATMEC\tLOGIC\t'Ergodicity' means?\tHigh entropy\tTime av
         card.id = "active-card";
         
         card.innerHTML = `
-            <div class="card-top">
+            <div class="overlay-bg overlay-right-bg" id="bg-right"></div>
+            <div class="overlay-bg overlay-left-bg" id="bg-left"></div>
+            <div class="overlay-bg overlay-up-bg" id="bg-up"></div>
+            <div class="overlay-bg overlay-down-bg" id="bg-down"></div>
+
+            <div class="card-top" id="q-container">
                 <div class="card-meta">${q.dom || 'CHEMISTRY'} • Q${INDEX+1}</div>
                 <div class="card-q">${formatText(q.q)}</div>
             </div>
+            
+            <div class="overlay-text" id="overlay-main-text"></div>
+
             <div class="card-bottom">
-                <div class="hint-pill">⬇ ${formatText(q.u_txt)}</div>
-                <div class="choice-block">
-                    <div class="choice-label">SWIPE LEFT</div>
+                <div class="choice-block" id="blk-left">
+                    <div class="choice-label">← LEFT</div>
                     <div class="choice-text">${formatText(q.l_txt)}</div>
                 </div>
-                <div class="choice-block">
-                    <div class="choice-label">SWIPE RIGHT</div>
+                <div class="choice-block" id="blk-up">
+                    <div class="choice-label">↑ UP</div>
+                    <div class="choice-text">${formatText(q.u_txt)}</div>
+                </div>
+                <div class="choice-block" id="blk-right">
+                    <div class="choice-label">RIGHT →</div>
                     <div class="choice-text">${formatText(q.r_txt)}</div>
                 </div>
             </div>
-            <div class="overlay-label overlay-right" id="ov-right"></div>
-            <div class="overlay-label overlay-left" id="ov-left"></div>
-            <div class="overlay-label overlay-down" id="ov-down">ANALYSIS</div>
         `;
         document.getElementById('stack-container').appendChild(card);
         bindPhysics(card, q);
     }
 
-    // --- 8. PHYSICS & LOGGING ---
     function bindPhysics(el, data) {
         let startX, startY, isDragging = false;
+        const qContainer = el.querySelector('#q-container');
+        const overlayText = el.querySelector('#overlay-main-text');
+
         el.addEventListener('touchstart', e => { isDragging=true; startX=e.touches[0].clientX; startY=e.touches[0].clientY; el.style.transition='none'; });
+        
         window.addEventListener('touchmove', e => {
             if (!isDragging) return;
             const x = e.touches[0].clientX - startX;
             const y = e.touches[0].clientY - startY;
-            el.style.transform = `translate(${x}px, ${y}px) rotate(${x*0.05}deg)`;
-            if(x>50) { el.querySelector('#ov-right').innerHTML=formatText(data.r_txt); el.querySelector('#ov-right').style.opacity=x/150; }
-            else if(x<-50) { el.querySelector('#ov-left').innerHTML=formatText(data.l_txt); el.querySelector('#ov-left').style.opacity=Math.abs(x)/150; }
-            else if(y>50) el.querySelector('#ov-down').style.opacity=y/150;
-            else el.querySelectorAll('.overlay-label').forEach(l=>l.style.opacity=0);
+            
+            // 1. ROTATION CLAMP (Max 15deg)
+            let rot = x * 0.05;
+            if (rot > 15) rot = 15; if (rot < -15) rot = -15;
+
+            el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+            
+            // 2. FADE LOGIC
+            const dist = Math.sqrt(x*x + y*y);
+            const opacity = Math.min(dist / 120, 1);
+            
+            // Fade Out Question
+            qContainer.style.opacity = Math.max(0, 1 - (dist / 150));
+            overlayText.style.opacity = opacity;
+
+            // Reset Overlays
+            el.querySelectorAll('.overlay-bg').forEach(o => o.style.opacity = 0);
+            el.querySelectorAll('.choice-block').forEach(b => b.classList.remove('active'));
+
+            // 3. DIRECTION DETECT
+            if (y > 50 && Math.abs(x) < 80) { // DOWN
+                el.querySelector('#bg-down').style.opacity = opacity;
+                overlayText.innerText = "ANALYSIS";
+            } else if (y < -50 && Math.abs(x) < 80) { // UP
+                el.querySelector('#bg-up').style.opacity = opacity;
+                overlayText.innerHTML = formatText(data.u_txt);
+                el.querySelector('#blk-up').classList.add('active');
+            } else if (x > 50) { // RIGHT
+                el.querySelector('#bg-right').style.opacity = opacity;
+                overlayText.innerHTML = formatText(data.r_txt);
+                el.querySelector('#blk-right').classList.add('active');
+            } else if (x < -50) { // LEFT
+                el.querySelector('#bg-left').style.opacity = opacity;
+                overlayText.innerHTML = formatText(data.l_txt);
+                el.querySelector('#blk-left').classList.add('active');
+            }
         });
+
         window.addEventListener('touchend', e => {
             if (!isDragging) return; isDragging=false;
             const x = e.changedTouches[0].clientX-startX; const y = e.changedTouches[0].clientY-startY;
             if (Math.sqrt(x*x+y*y)>100) {
                 if(y>50 && Math.abs(x)<80) finishSwipe(el, data, "DOWN");
+                else if(y<-50 && Math.abs(x)<80) finishSwipe(el, data, "UP");
                 else if(x>50) finishSwipe(el, data, "RIGHT");
                 else if(x<-50) finishSwipe(el, data, "LEFT");
-                else if(y<-50) finishSwipe(el, data, "UP");
                 else resetCard(el);
             } else resetCard(el);
         });
     }
 
-    function resetCard(el) { el.style.transition='transform 0.3s'; el.style.transform='translate(0,0)'; el.querySelectorAll('.overlay-label').forEach(l=>l.style.opacity=0); }
+    function resetCard(el) { 
+        el.style.transition='transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+        el.style.transform='translate(0,0)'; 
+        el.querySelector('#q-container').style.opacity = 1;
+        el.querySelector('#overlay-main-text').style.opacity = 0;
+        el.querySelectorAll('.overlay-bg').forEach(o => o.style.opacity = 0);
+        el.querySelectorAll('.choice-block').forEach(b => b.classList.remove('active'));
+    }
+
     function finishSwipe(el, data, dir) {
         const endX = dir==="RIGHT"?window.innerWidth:(dir==="LEFT"?-window.innerWidth:0);
         const endY = dir==="UP"?-window.innerHeight:(dir==="DOWN"?window.innerHeight:0);
-        el.style.transition='transform 0.4s'; el.style.transform=`translate(${endX}px,${endY}px)`;
+        el.style.transition='transform 0.4s ease-in'; 
+        el.style.transform=`translate(${endX}px,${endY}px)`;
+
         if(dir==="DOWN") { setTimeout(()=>{showAnalysis(data.expl); el.remove(); INDEX++; renderCard();},200); logData(data.id,"ANALYSIS","VIEW",""); }
         else { 
             const corr = (dir===data.actualAns); SCORE += corr?1:0; 
@@ -435,7 +385,6 @@ FAC_30\tFACULTY_DEMO\tSTATMEC\tLOGIC\t'Ergodicity' means?\tHigh entropy\tTime av
         }
     }
 
-    // --- 9. UTILS & SYSTEM ---
     function showAnalysis(t) { document.getElementById('modal-text').innerHTML = `<strong>INSIGHT</strong><br><br>${formatText(t)}`; document.getElementById('analysis-modal').classList.add('open'); }
     function closeModal() { document.getElementById('analysis-modal').classList.remove('open'); }
     
@@ -457,12 +406,11 @@ FAC_30\tFACULTY_DEMO\tSTATMEC\tLOGIC\t'Ergodicity' means?\tHigh entropy\tTime av
         for(let i=0;i<l.length;i++){ let c=l[i].split(/\t/); if(c.length>=8 && c[0]!=="ID") p.push({id:c[0], set:c[1], dom:c[2], q:c[4], u:c[5], r:c[6], l:c[7], ans:c[8], expl:c[9]||""}); }
         if(p.length){ 
             const tx = db.transaction([STORE_NAME],"readwrite"); 
-            tx.objectStore(STORE_NAME).put(p, "User Imported Set"); 
+            tx.objectStore(STORE_NAME).put(p, p[0].set); 
             tx.oncomplete = () => { alert("Imported!"); document.getElementById('data-input').value=""; refreshLibrary(); }
         }
     }
     function clearLibrary() { if(confirm("Reset Everything?")) { indexedDB.deleteDatabase(DB_NAME); location.reload(); } }
-
 </script>
 </body>
 </html>
