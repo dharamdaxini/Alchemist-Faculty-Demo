@@ -1,0 +1,196 @@
+// ALCHEMIST V135.0 LOGIC ENGINE
+// Place this inside the <script> tags of your index.html
+
+    // --- 1. CONFIGURATION ---
+    // YOUR LIVE URL IS HARDCODED HERE
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbz8iKy59CSXNWl19EDjdyv8QiiKqyOkR6s8e9KHA9zse9k1Ze-POZCKstbYAVfBnw0EfQ/exec";
+    const SESSION_ID = "FAC_" + Date.now().toString().slice(-5);
+    let INDEX = 0, SCORE = 0, POOL = [];
+
+    // --- 2. THE FACULTY DATASET (30 QUESTIONS) ---
+    const FACULTY_DATA = [
+        {id:"FAC_01", dom:"THERMO", q:"What is the relationship between Kp and Kc for: N2 + 3H2 <=> 2NH3?", u:"Kp = Kc(RT)", r:"Kp = Kc(RT)^-2", l:"Kp = Kc(RT)^2", ans:"RIGHT", expl:"✅ Correct Logic: Delta n = (2 - 4) = -2. Therefore Kp = Kc(RT)^-2."},
+        {id:"FAC_02", dom:"KINETIC", q:"If Ea = 50 kJ/mol, by what factor does rate increase from 300K to 310K?", u:"~1.5x", r:"~2.0x", l:"~3.0x", ans:"RIGHT", expl:"✅ Correct Logic: Using Arrhenius eq, ln(k2/k1) ≈ 0.693, meaning the rate doubles."},
+        {id:"FAC_03", dom:"QUANTUM", q:"Energy of a particle in a 1D box in the second excited state (n=3)?", u:"h^2 / 8mL^2", r:"9h^2 / 8mL^2", l:"4h^2 / 8mL^2", ans:"RIGHT", expl:"✅ Correct Logic: Energy scales with n^2. Ground=1, 1st=2, 2nd=3. 3^2 = 9."},
+        {id:"FAC_04", dom:"ANALYT", q:"In HPLC, if tR = 5 min and w = 0.5 min, calculate theoretical plates (N).", u:"1600", r:"1600", l:"100", ans:"RIGHT", expl:"✅ Correct Logic: N = 16 * (tR / w)^2 = 16 * (5 / 0.5)^2 = 16 * 100 = 1600."},
+        {id:"FAC_05", dom:"INORG", q:"Calculate CFSE for a d6 high-spin octahedral complex.", u:"-2.4 Do", r:"-0.4 Do", l:"0 Do", ans:"RIGHT", expl:"✅ Correct Logic: High spin d6 is t2g(4) eg(2). CFSE = 4(-0.4) + 2(0.6) = -0.4."},
+        {id:"FAC_06", dom:"ORGANIC", q:"How many 1H NMR signals are in 1,2-dichloroethane?", u:"2 Signals", r:"1 Signal", l:"4 Signals", ans:"RIGHT", expl:"✅ Correct Logic: Due to symmetry, all 4 protons are chemically and magnetically equivalent."},
+        {id:"FAC_07", dom:"THERMO", q:"Ionic strength (I) of 0.1 M Na2SO4 solution?", u:"0.1 M", r:"0.3 M", l:"0.2 M", ans:"RIGHT", expl:"✅ Correct Logic: I = 0.5 * sum(ci * zi^2) = 0.5 * (0.2*1^2 + 0.1*2^2) = 0.3 M."},
+        {id:"FAC_08", dom:"QUANTUM", q:"Uncertainty in velocity if Delta x = 1.0 A for an electron?", u:"5.8e5 m/s", r:"5.8e5 m/s", l:"1.0e6 m/s", ans:"RIGHT", expl:"✅ Correct Logic: Delta v = h / (4pi * m * Delta x). Calculation yields ~5.8e5 m/s."},
+        {id:"FAC_09", dom:"ANALYT", q:"Peak separation (Delta Ep) for a reversible 1-electron CV transfer?", u:"29 mV", r:"59 mV", l:"0 mV", ans:"RIGHT", expl:"✅ Correct Logic: For a reversible Nernstian couple, Delta Ep = 59/n mV at 25C."},
+        {id:"FAC_10", dom:"INORG", q:"Spin-only magnetic moment for Co2+ (d7) in tetrahedral field?", u:"1.73 BM", r:"3.87 BM", l:"4.90 BM", ans:"RIGHT", expl:"✅ Correct Logic: Tetrahedral is High Spin (e4 t2 3). 3 unpaired e-. sqrt(3*5) = 3.87 BM."},
+        {id:"FAC_11", dom:"ORGANIC", q:"Degree of unsaturation (DoU) for C6H10O?", u:"1", r:"2", l:"3", ans:"RIGHT", expl:"✅ Correct Logic: DoU = C + 1 - H/2 = 6 + 1 - 5 = 2. (Could be 2 rings, 2 pi bonds)."},
+        {id:"FAC_12", dom:"KINETIC", q:"For 2nd order (A->P), t=20min for 1.0M to 0.5M. Time to drop 0.5M to 0.25M?", u:"20 min", r:"40 min", l:"60 min", ans:"RIGHT", expl:"✅ Correct Logic: In 2nd order, half-life doubles as concentration halves. 20 * 2 = 40 min."},
+        {id:"FAC_13", dom:"STATMEC", q:"Rotational partition function (qr) for heteronuclear diatomic at high T?", u:"kT / hB", r:"kT / hcB", l:"kT / 2hcB", ans:"RIGHT", expl:"✅ Correct Logic: For sigma=1 (heteronuclear), qr = kT / hcB."},
+        {id:"FAC_14", dom:"INORG", q:"Why is 'Trans Influence' strong for high pi-acidity ligands?", u:"Donates e-", r:"Orbital Competition", l:"Steric", ans:"RIGHT", expl:"✅ Correct Logic: They withdraw density from the same metal d-orbitals used by the trans ligand, weakening its bond."},
+        {id:"FAC_15", dom:"ORGANIC", q:"In 'Robinson Annulation', what are the two sequential reactions?", u:"Aldol + Wittig", r:"Michael + Aldol", l:"Michael + Claisen", ans:"RIGHT", expl:"✅ Correct Logic: It begins with a Michael addition followed by an intramolecular Aldol condensation."},
+        {id:"FAC_16", dom:"QUANTUM", q:"Physical origin of 'Exchange Energy' in multi-electron systems?", u:"Coulomb", r:"Pauli + Coulomb", l:"Gravity", ans:"RIGHT", expl:"✅ Correct Logic: Antisymmetry keeps same-spin electrons apart (Fermi Hole), reducing their Coulomb repulsion."},
+        {id:"FAC_17", dom:"ANALYT", q:"Why use 'Internal Standard' in quantitative GC?", u:"Clean syringe", r:"Ratio correction", l:"Lower BP", ans:"RIGHT", expl:"✅ Correct Logic: It compensates for human error in injection volume or instrument drift."},
+        {id:"FAC_18", dom:"THERMO", q:"What implies a 'Negative' Volume of Activation (Delta V++)?", u:"Slower at high P", r:"Faster at high P", l:"No change", ans:"RIGHT", expl:"✅ Correct Logic: Negative means the Transition State is more compact, so Pressure accelerates it."},
+        {id:"FAC_19", dom:"INORG", q:"Why 'Inverse' Spinel for Fe3O4?", u:"Lattice Energy", r:"Site Preference", l:"Size mismatch", ans:"RIGHT", expl:"✅ Correct Logic: Fe(III) is d5 (0 CFSE). Fe(II) is d6 and gains stability in the octahedral B-site."},
+        {id:"FAC_20", dom:"ORGANIC", q:"'Endo' selectivity in Diels-Alder is due to?", u:"Sterics", r:"Pi-Overlap", l:"Entropy", ans:"RIGHT", expl:"✅ Correct Logic: Overlap between the pi-system of the substituent and the diene stabilizes the endo TS."},
+        {id:"FAC_21", dom:"KINETIC", q:"'Steady-State Approximation' implies?", u:"Conc = 0", r:"Rate form = Rate loss", l:"Time = infinity", ans:"RIGHT", expl:"✅ Correct Logic: It assumes d[I]/dt = 0 for highly reactive intermediates."},
+        {id:"FAC_22", dom:"ANALYT", q:"Why use 'Deuterated' solvent in NMR?", u:"Solubility", r:"Invisible Solvent", l:"Cooling", ans:"RIGHT", expl:"✅ Correct Logic: Deuterium resonates at a different frequency, making the solvent 'invisible' in 1H NMR."},
+        {id:"FAC_23", dom:"LAB", q:"Primary risk of heating a 'Closed System'?", u:"Solvent loss", r:"Explosion", l:"Slow rxn", ans:"RIGHT", expl:"✅ Correct Logic: PV=nRT. increasing T in fixed V causes massive P increase -> Explosion."},
+        {id:"FAC_24", dom:"LAB", q:"Why 'Acid to Water' during dilution?", u:"Mixing", r:"Heat Safety", l:"Speed", ans:"RIGHT", expl:"✅ Correct Logic: High heat capacity of water absorbs the exothermic energy safely."},
+        {id:"FAC_25", dom:"LAB", q:"Function of 'Boric Acid' in Kjeldahl method?", u:"Digest", r:"Trap Ammonia", l:"Catalyst", ans:"RIGHT", expl:"✅ Correct Logic: Ammonia distilled is captured in boric acid to form ammonium borate for titration."},
+        {id:"FAC_26", dom:"QUANTUM", q:"'Born-Oppenheimer' approx fails when?", u:"High Mass", r:"Surfaces Touch", l:"Relativistic", ans:"RIGHT", expl:"✅ Correct Logic: When energy gap vanishes (Conical Intersection), nuclear and electronic timescales mix."},
+        {id:"FAC_27", dom:"THERMO", q:"'Critical Opalescence' is caused by?", u:"Solidification", r:"Density Fluctuation", l:"Absorption", ans:"RIGHT", expl:"✅ Correct Logic: Near critical point, density fluctuations match light wavelength -> scattering."},
+        {id:"FAC_28", dom:"INORG", q:"'Jahn-Teller' distortion in d9 octahedral?", u:"Symmetry Up", r:"Lower Energy", l:"Sterics", ans:"RIGHT", expl:"✅ Correct Logic: Distorting splits the degenerate levels, putting the odd electron in a lower energy orbital."},
+        {id:"FAC_29", dom:"ORGANIC", q:"'Favorskii' rearrangement mechanism?", u:"Radical", r:"Cyclopropanone", l:"Carbocation", ans:"RIGHT", expl:"✅ Correct Logic: Base removes alpha-H, forming a cyclopropanone intermediate via internal SN2."},
+        {id:"FAC_30", dom:"STATMEC", q:"'Ergodicity' means?", u:"Entropy", r:"Time = Ensemble", l:"Chaos", ans:"RIGHT", expl:"✅ Correct Logic: The system visits all possible states over time, so one trace represents the whole group."}
+    ];
+
+    // --- 3. INIT ---
+    function init() {
+        POOL = FACULTY_DATA; // Load Data
+        renderCard();
+        logData("INIT", "APP_OPEN", "SUCCESS");
+    }
+
+    // --- 4. RENDER ENGINE ---
+    function renderCard() {
+        if (INDEX >= POOL.length) { renderEnd(); return; }
+        
+        const q = POOL[INDEX];
+        // Shuffle Options Logic
+        const opts = [
+            { txt: q.u, isCorrect: q.ans === "UP", dir: "UP" },
+            { txt: q.r, isCorrect: q.ans === "RIGHT", dir: "RIGHT" },
+            { txt: q.l, isCorrect: q.ans === "LEFT", dir: "LEFT" }
+        ].sort(() => Math.random() - 0.5);
+
+        // Assign shuffled positions
+        q.u_txt = opts[0].txt; q.u_chk = opts[0].isCorrect;
+        q.r_txt = opts[1].txt; q.r_chk = opts[1].isCorrect;
+        q.l_txt = opts[2].txt; q.l_chk = opts[2].isCorrect;
+        
+        // Correct Answer Direction (for logic)
+        q.actualAns = q.u_chk ? "UP" : (q.r_chk ? "RIGHT" : "LEFT");
+
+        // Create HTML
+        const card = document.createElement('div');
+        card.className = "card";
+        card.id = "active-card";
+        card.innerHTML = `
+            <div class="card-meta">${q.dom} • Q${INDEX+1}</div>
+            <div class="card-q">${q.q}</div>
+            
+            <div class="choice-pill">
+                <span>← ${q.l_txt}</span>
+                <span>${q.r_txt} →</span>
+            </div>
+            <div style="position:absolute; bottom:15px; font-size:0.7rem; color:#555;">⬆ ${q.u_txt}</div>
+
+            <div class="overlay-label lbl-right">CORRECT</div>
+            <div class="overlay-label lbl-left">INCORRECT</div>
+            <div class="overlay-label lbl-down">ANALYSIS</div>
+        `;
+
+        document.getElementById('stack-container').appendChild(card);
+        bindPhysics(card, q);
+    }
+
+    // --- 5. PHYSICS ENGINE ---
+    function bindPhysics(el, data) {
+        let startX, startY, isDragging = false;
+
+        el.addEventListener('touchstart', e => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            el.style.transition = 'none';
+        });
+
+        window.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            const x = e.touches[0].clientX - startX;
+            const y = e.touches[0].clientY - startY;
+            const rotation = x * 0.05; 
+            el.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+
+            el.querySelector('.lbl-right').style.opacity = x > 50 ? x/150 : 0;
+            el.querySelector('.lbl-left').style.opacity = x < -50 ? Math.abs(x)/150 : 0;
+            el.querySelector('.lbl-down').style.opacity = y > 50 ? y/150 : 0;
+        });
+
+        window.addEventListener('touchend', e => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const x = e.changedTouches[0].clientX - startX;
+            const y = e.changedTouches[0].clientY - startY;
+            const dist = Math.sqrt(x*x + y*y);
+
+            if (dist > 100) {
+                if (y > 50 && Math.abs(x) < 80) finishSwipe(el, data, "DOWN"); // Deep Dive
+                else if (x > 50) finishSwipe(el, data, "RIGHT");
+                else if (x < -50) finishSwipe(el, data, "LEFT");
+                else if (y < -50) finishSwipe(el, data, "UP");
+                else resetCard(el);
+            } else {
+                resetCard(el);
+            }
+        });
+    }
+
+    function resetCard(el) {
+        el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        el.style.transform = 'translate(0, 0)';
+        el.querySelectorAll('.overlay-label').forEach(l => l.style.opacity = 0);
+    }
+
+    function finishSwipe(el, data, dir) {
+        const screenW = window.innerWidth;
+        let endX = dir === "RIGHT" ? screenW : (dir === "LEFT" ? -screenW : 0);
+        let endY = dir === "UP" ? -window.innerHeight : (dir === "DOWN" ? window.innerHeight : 0);
+        
+        el.style.transition = 'transform 0.4s ease-in';
+        el.style.transform = `translate(${endX}px, ${endY}px) rotate(${endX/10}deg)`;
+
+        if (dir === "DOWN") {
+            setTimeout(() => {
+                showAnalysis(data.expl);
+                el.remove(); INDEX++; renderCard();
+            }, 200);
+            logData(data.id, "ANALYSIS", "VIEW");
+        } else {
+            const isCorrect = (dir === data.actualAns);
+            SCORE += isCorrect ? 1 : 0;
+            document.getElementById('score-disp').innerText = `ACCURACY ${Math.round((SCORE / (INDEX+1))*100)}%`;
+            document.getElementById('progress').style.width = `${((INDEX+1)/FACULTY_DATA.length)*100}%`;
+            logData(data.id, dir, isCorrect ? "CORRECT" : "WRONG");
+            setTimeout(() => { el.remove(); INDEX++; renderCard(); }, 300);
+        }
+    }
+
+    // --- 6. UTILS ---
+    function showAnalysis(text) {
+        document.getElementById('modal-text').innerHTML = `<strong style='color:var(--accent); font-family:var(--font-head); font-size:1.4rem'>FACULTY INSIGHT</strong><br><br>${text}`;
+        document.getElementById('analysis-modal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('analysis-modal').classList.remove('open'); }
+    
+    function logData(qid, act, res) {
+        const pulse = document.getElementById('sync-dot');
+        pulse.classList.add('active'); setTimeout(() => pulse.classList.remove('active'), 500);
+        
+        if (BACKEND_URL) fetch(BACKEND_URL, {
+            method: "POST", mode: "no-cors",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({session_id: SESSION_ID, question_id: qid, action: act, result: res, device: navigator.platform})
+        });
+    }
+
+    function renderEnd() {
+        document.getElementById('stack-container').innerHTML = `
+            <div class="card" style="justify-content:center;">
+                <div style="color:var(--accent); font-size:3rem;">✓</div>
+                <div class="card-q">DEMO COMPLETE</div>
+                <p>Final Accuracy: ${Math.round((SCORE/FACULTY_DATA.length)*100)}%</p>
+                <p style="font-size:0.8rem; color:#666;">Performance Data sent to Faculty Dashboard.</p>
+                <button class="modal-btn" onclick="location.reload()">RESTART</button>
+            </div>`;
+    }
+
+    init();

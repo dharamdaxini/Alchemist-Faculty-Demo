@@ -1,0 +1,187 @@
+<style>
+    /* --- 1. DESIGN TOKENS --- */
+    :root { 
+        --bg: #050505;              /* Deepest Black */
+        --card-bg: #121212;         /* Material Dark */
+        --border: #2a2a2a;          /* Subtle borders */
+        --accent: #d4af37;          /* "University Gold" - Trust Color */
+        --text-main: #e0e0e0;       /* Off-white for readability */
+        --text-sub: #888;           /* Muted text */
+        --green: #2ecc71;           /* Success */
+        --red: #e74c3c;             /* Error */
+        --font-head: 'Playfair Display', serif; /* Authority Font */
+        --font-body: 'Inter', sans-serif;       /* UI Font */
+    }
+
+    /* --- 2. GLOBAL RESET --- */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
+    body { 
+        margin: 0; 
+        height: 100vh; 
+        background: var(--bg); 
+        color: var(--text-main); 
+        font-family: var(--font-body); 
+        overflow: hidden; 
+        display: flex; 
+        flex-direction: column; 
+    }
+
+    /* --- 3. HEADER (Floating & Blurred) --- */
+    #header { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 60px; 
+        display: flex; justify-content: space-between; align-items: center; 
+        padding: 0 24px; z-index: 1000; 
+        background: linear-gradient(to bottom, rgba(5,5,5,1) 0%, rgba(5,5,5,0) 100%);
+        pointer-events: none; /* Let clicks pass through to cards */
+    }
+    .brand { 
+        font-family: var(--font-head); 
+        font-size: 1.1rem; 
+        letter-spacing: 1px; 
+        color: var(--accent); 
+        font-weight: 900;
+    }
+    .stat-pill { 
+        background: rgba(255,255,255,0.08); 
+        padding: 6px 16px; 
+        border-radius: 100px; 
+        font-size: 0.7rem; 
+        border: 1px solid rgba(255,255,255,0.1); 
+        font-weight: 600; 
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(4px);
+    }
+    .sync-pulse { 
+        width: 6px; height: 6px; 
+        background: var(--green); 
+        border-radius: 50%; 
+        opacity: 0; 
+        transition: opacity 0.5s ease; 
+        box-shadow: 0 0 8px var(--green); 
+    }
+    .sync-pulse.active { opacity: 1; }
+
+    /* --- 4. CARD STACK ENGINE --- */
+    #stack-container {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1200px; /* Deep 3D space */
+        overflow: visible;
+        margin-top: 20px;
+    }
+
+    /* Main Card Style */
+    .card { 
+        position: absolute; 
+        width: 90%; max-width: 360px; 
+        height: 60vh; max-height: 520px;
+        background: var(--card-bg); 
+        border-radius: 28px; 
+        border: 1px solid var(--border); 
+        padding: 32px; 
+        display: flex; flex-direction: column; 
+        justify-content: center; align-items: center; text-align: center; 
+        box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6); /* Deep Shadow */
+        transform-origin: 50% 120%; /* Rotation pivot point below screen */
+        will-change: transform;
+    }
+
+    /* Visual Depth (The "Deck" Look) */
+    .card-dummy { 
+        z-index: -1; 
+        background: #181818; 
+        transform: scale(0.96) translateY(18px); 
+        opacity: 0.5; 
+        border-color: #222;
+    }
+    .card-dummy-2 { 
+        z-index: -2; 
+        background: #202020; 
+        transform: scale(0.92) translateY(36px); 
+        opacity: 0.25; 
+        border-color: #1a1a1a;
+    }
+
+    /* Typography inside Card */
+    .card-q { 
+        font-family: var(--font-head); 
+        font-size: clamp(1.3rem, 5vmin, 1.8rem); 
+        line-height: 1.35; 
+        color: #fff; 
+        margin-bottom: 24px;
+        font-weight: 700;
+    }
+    .card-meta { 
+        font-family: 'JetBrains Mono', monospace; 
+        font-size: 0.6rem; 
+        color: var(--accent); 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+        margin-bottom: 20px; 
+        opacity: 0.9; 
+    }
+
+    /* --- 5. SWIPE FEEDBACK OVERLAYS --- */
+    .overlay-label {
+        position: absolute; inset: 0; border-radius: 28px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-body);
+        font-weight: 900; font-size: 1.8rem; letter-spacing: 4px;
+        opacity: 0; transition: opacity 0.1s; pointer-events: none;
+        backdrop-filter: blur(2px);
+    }
+    .lbl-right { background: rgba(46, 204, 113, 0.1); border: 3px solid var(--green); color: var(--green); }
+    .lbl-left { background: rgba(231, 76, 60, 0.1); border: 3px solid var(--red); color: var(--red); }
+    .lbl-down { background: rgba(212, 175, 55, 0.1); border: 3px solid var(--accent); color: var(--accent); }
+
+    /* --- 6. NAVIGATION HINTS --- */
+    .choice-pill {
+        position: absolute; bottom: 35px; 
+        width: 100%; padding: 0 35px;
+        display: flex; justify-content: space-between; 
+        font-size: 0.7rem; color: #555; 
+        font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    /* --- 7. ANALYSIS MODAL (Glassmorphism) --- */
+    #analysis-modal {
+        position: fixed; inset: 0; 
+        background: rgba(0,0,0,0.85); 
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        z-index: 5000; 
+        display: none; flex-direction: column; padding: 40px;
+        opacity: 0; transition: opacity 0.25s ease;
+    }
+    #analysis-modal.open { display: flex; opacity: 1; }
+    
+    .modal-content { 
+        flex: 1; 
+        display: flex; flex-direction: column; justify-content: center;
+        color: #eee; line-height: 1.8; font-size: 1.1rem; text-align: center; 
+        font-family: var(--font-body);
+    }
+    .modal-btn { 
+        background: var(--accent); 
+        color: #050505; 
+        border: none; padding: 18px; 
+        border-radius: 14px; 
+        font-weight: 800; font-size: 0.85rem; 
+        margin-top: 20px; 
+        text-transform: uppercase; letter-spacing: 1.5px; 
+        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+    }
+    .modal-btn:active { transform: scale(0.98); }
+
+    /* --- 8. PROGRESS BAR --- */
+    .progress-line { 
+        position: fixed; bottom: 0; left: 0; 
+        height: 3px; 
+        background: var(--accent); 
+        width: 0%; 
+        transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: 0 0 10px var(--accent);
+    }
+</style>
