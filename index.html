@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | PRECISION UI</title>
+    <title>ALCHEMIST | STRESS TEST</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,27 +11,17 @@
     
     <style>
         :root { 
-            /* NAVY PALETTE from Screenshot */
-            --bg: #05080f;              
-            --card-bg: #0b172a;         
-            --dock-bg: #0f203a;         
-            --border: #1e2f4a;          
-            --accent: #38bdf8;          
-            --text-main: #f0f4f8;       
-            --text-sub: #64748b;        
-            
-            --font-ui: 'Inter', sans-serif;
-            --font-book: 'Crimson Pro', serif;       
+            --bg: #05080f; --card-bg: #0b172a; --dock-bg: #0e1b2e; 
+            --border: #1e2f4a; --accent: #38bdf8; --text-main: #f0f4f8; 
+            --text-sub: #64748b; --green: #4ade80; --red: #f87171; 
+            --font-ui: 'Inter', sans-serif; --font-book: 'Crimson Pro', serif;       
             --font-code: 'JetBrains Mono', monospace;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
-        body { 
-            margin: 0; height: 100vh; background: var(--bg); color: var(--text-main); 
-            font-family: var(--font-ui); overflow: hidden; display: flex; flex-direction: column; 
-        }
+        body { margin: 0; height: 100vh; background: var(--bg); color: var(--text-main); font-family: var(--font-ui); overflow: hidden; display: flex; flex-direction: column; }
 
-        /* --- PORTAL --- */
+        /* PORTAL */
         #portal { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; }
         .portal-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
         .app-title { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
@@ -46,91 +36,43 @@
         .btn-blue { background: var(--accent); color: #000; }
         .btn-dark { background: var(--dock-bg); color: var(--text-sub); border: 1px solid var(--border); }
 
-        /* --- SESSION --- */
+        /* SESSION */
         #session-view { display: none; flex-direction: column; height: 100vh; position: relative; }
-        
-        #header { 
-            width: 100%; height: 70px; display: flex; justify-content: space-between; align-items: center; 
-            padding: 0 24px; z-index: 1000; background: transparent;
-        }
+        #header { width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; background: transparent; }
         .nav-back { font-size: 0.75rem; color: var(--text-sub); font-weight: 700; text-transform: uppercase; cursor: pointer; }
-        .stat-pill { background: rgba(11, 23, 42, 0.8); padding: 8px 16px; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--border); font-weight: 700; letter-spacing: 1px; font-family: var(--font-code); }
+        .stat-pill { background: rgba(11,23,42,0.8); padding: 8px 16px; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--border); font-weight: 700; letter-spacing: 1px; font-family: var(--font-code); }
 
         /* STAGE */
-        #stage { 
-            flex-grow: 1; display: flex; align-items: center; justify-content: center; 
-            overflow: visible; position: relative; perspective: 1000px;
-        }
+        #stage { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: visible; position: relative; perspective: 1000px; }
 
         /* CARD */
         .card { 
-            position: absolute; 
-            width: 90%; max-width: 360px; 
-            height: 65vh; max-height: 550px;
-            background: var(--card-bg); 
-            border-radius: 20px; 
-            border: 1px solid var(--border); 
+            position: absolute; width: 92%; max-width: 380px; height: 75vh; max-height: 650px;
+            background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); 
             display: flex; flex-direction: column; 
-            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5); 
-            
-            /* PIVOT: Bottom Center of the User's Screen Logic */
-            /* We simulate the pivot via JS, but CSS origin helps smooth transitions */
-            transform-origin: 50% 120%; 
-            will-change: transform; 
-            overflow: hidden;
+            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6); 
+            transform-origin: 50% 150vh; /* Unit Circle Origin */
+            will-change: transform; overflow: hidden;
         }
 
-        /* CONTENT AREA */
-        .card-top { 
-            flex-grow: 1; padding: 30px; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; 
-            position: relative;
-        }
-        
-        .card-q { 
-            font-family: var(--font-book); 
-            font-size: clamp(1.8rem, 5vmin, 2.4rem); 
-            font-weight: 600; line-height: 1.25; color: #fff; 
-            transition: opacity 0.1s; 
-        }
+        .card-top { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; transition: opacity 0.2s; }
+        .card-q { font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.2rem); font-weight: 600; line-height: 1.3; color: #fff; }
+        .card-overlay-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 800; color: #fff; opacity: 0; pointer-events: none; width: 90%; text-align: center; text-shadow: 0 10px 30px rgba(0,0,0,0.8); font-family: var(--font-ui); transition: opacity 0.1s; }
 
-        /* OVERLAY (The Answer Fading In) */
-        .card-overlay-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: var(--font-book);
-            font-size: 2rem; font-weight: 600; color: #fff;
-            opacity: 0; pointer-events: none; width: 90%; text-align: center;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8); 
-            transition: opacity 0.1s;
-        }
-
-        /* DOCK (Match Screenshot Layout) */
+        /* VERTICAL DOCK */
         .card-dock { 
-            height: 150px; background: var(--dock-bg); 
-            border-top: 1px solid var(--border); 
-            display: grid; grid-template-columns: 1fr 1fr 1fr; 
-            flex-shrink: 0;
+            min-height: 200px; background: var(--dock-bg); border-top: 1px solid var(--border); 
+            display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; padding: 5px 0;
         }
-
         .dock-col { 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            border-right: 1px solid var(--border); position: relative;
-            transition: background 0.2s;
+            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
+            flex: 1; padding: 0 24px; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s;
         }
-        .dock-col:last-child { border-right: none; }
-        
-        .dock-label { 
-            font-size: 0.6rem; font-weight: 800; color: var(--text-sub); 
-            letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase; 
-        }
-        .dock-val { 
-            font-family: var(--font-book); font-size: 1.1rem; color: var(--text-main); font-weight: 600; 
-            opacity: 0.8; text-align: center; line-height: 1.1; padding: 0 4px;
-        }
-        
-        /* Highlight States */
-        .dock-col.active { background: rgba(56, 189, 248, 0.1); }
-        .dock-col.active .dock-val { color: var(--accent); opacity: 1; transform: scale(1.05); }
+        .dock-col:last-child { border-bottom: none; }
+        .dock-label { font-size: 0.65rem; font-weight: 800; color: var(--text-sub); letter-spacing: 1px; text-transform: uppercase; width: 80px; flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+        .dock-val { font-family: var(--font-book); font-size: 1.1rem; color: var(--text-main); font-weight: 500; opacity: 0.8; text-align: right; line-height: 1.2; }
+        .dock-col.active { background: rgba(56, 189, 248, 0.15); }
+        .dock-col.active .dock-val { color: var(--accent); opacity: 1; }
 
         .card-dummy { position: absolute; width: 85%; height: 60vh; background: #08101e; border-radius: 20px; z-index: -1; opacity: 0.5; bottom: 15%; }
 
@@ -138,15 +80,13 @@
         #analysis-modal { position: fixed; inset: 0; background: rgba(5,8,15,0.98); z-index: 5000; display: none; flex-direction: column; padding: 30px; opacity: 0; transition: opacity 0.25s ease; }
         #analysis-modal.open { display: flex; opacity: 1; }
         .modal-content { flex: 1; display: flex; flex-direction: column; justify-content: center; color: #cbd5e1; line-height: 1.8; font-size: 1.2rem; font-family: var(--font-book); }
-        .modal-btn { background: var(--accent); color: #050505; border: none; padding: 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-top: 20px; text-transform: uppercase; letter-spacing: 1.5px; font-family: var(--font-ui); }
-
         .progress-line { position: fixed; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.4s; }
     </style>
 </head>
 <body>
 
     <div id="portal">
-        <div class="portal-header"><div class="app-title">Alchemist</div></div>
+        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Stress Test V144.1</div></div>
         <div id="library"></div>
         <div style="margin-top:auto;">
             <div class="section-label">System Tools</div>
@@ -169,19 +109,47 @@
 
     <div id="analysis-modal">
         <div class="modal-content" id="modal-text"></div>
-        <button class="modal-btn" onclick="closeModal()">CONTINUE</button>
+        <button class="btn btn-blue" onclick="closeModal()">CONTINUE</button>
     </div>
 
 <script>
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
     const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
     let db, INDEX = 0, SCORE = 0, POOL = [];
-    const DB_NAME = "AlchemistDB_V144", STORE_NAME = "Vaults";
+    const DB_NAME = "AlchemistDB_V144_1", STORE_NAME = "Vaults";
 
+    // --- FULL 30 QUESTION STRESS TEST DATA ---
     const DEMO_DATA = [
-        {id:"FAC_01", set:"FACULTY_DEMO", dom:"THERMO", q:"Relationship between Kp and Kc for N2 + 3H2 <=> 2NH3?", u:"Kp = Kc(RT)", r:"Kp = Kc(RT)^-2", l:"Kp = Kc(RT)^2", ans:"RIGHT", expl:"Delta n = -2. Thus Kp = Kc(RT)^-2."},
-        {id:"FAC_02", set:"FACULTY_DEMO", dom:"KINETIC", q:"If Ea = 50 kJ/mol, rate increase from 300K to 310K?", u:"1.5x", r:"~2.0x", l:"3.0x", ans:"RIGHT", expl:"Using Arrhenius eq, ln(k2/k1) approx 0.693."},
-        {id:"FAC_03", set:"FACULTY_DEMO", dom:"QUANTUM", q:"Energy of 1D box particle in 2nd excited state (n=3)?", u:"h^2/8mL^2", r:"9h^2/8mL^2", l:"4h^2/8mL^2", ans:"RIGHT", expl:"E scales with n^2. 2nd excited is n=3. 3^2=9."}
+        {id:"FAC_01", dom:"THERMO", q:"Relationship between Kp and Kc for: N2 + 3H2 <=> 2NH3?", u:"Kp = Kc(RT)", l:"Kp = Kc(RT)^2", r:"Kp = Kc(RT)^-2", ans:"RIGHT", expl:"Delta n = 2-4 = -2. Thus Kp = Kc(RT)^-2."},
+        {id:"FAC_02", dom:"KINETIC", q:"If Ea = 50 kJ/mol, by what factor does rate increase from 300K to 310K?", u:"~1.5x", l:"~3.0x", r:"~2.0x", ans:"RIGHT", expl:"Using Arrhenius eq, ln(k2/k1) ≈ 0.693, meaning the rate doubles."},
+        {id:"FAC_03", dom:"QUANTUM", q:"Energy of a particle in a 1D box in the second excited state (n=3)?", u:"h^2 / 8mL^2", l:"4h^2 / 8mL^2", r:"9h^2 / 8mL^2", ans:"RIGHT", expl:"Energy scales with n^2. Ground=1, 1st=2, 2nd=3. 3^2 = 9."},
+        {id:"FAC_04", dom:"ANALYT", q:"In HPLC, if tR = 5 min and w = 0.5 min, calculate theoretical plates (N).", u:"1600", l:"100", r:"1600", ans:"RIGHT", expl:"N = 16 * (tR / w)^2 = 16 * (5 / 0.5)^2 = 16 * 100 = 1600."},
+        {id:"FAC_05", dom:"INORG", q:"Calculate CFSE for a d6 high-spin octahedral complex.", u:"-2.4 Do", l:"0 Do", r:"-0.4 Do", ans:"RIGHT", expl:"High spin d6 is t2g(4) eg(2). CFSE = 4(-0.4) + 2(0.6) = -0.4."},
+        {id:"FAC_06", dom:"ORGANIC", q:"How many 1H NMR signals are in 1,2-dichloroethane?", u:"2 Signals", l:"4 Signals", r:"1 Signal", ans:"RIGHT", expl:"Due to symmetry, all 4 protons are chemically and magnetically equivalent."},
+        {id:"FAC_07", dom:"THERMO", q:"Ionic strength (I) of 0.1 M Na2SO4 solution?", u:"0.1 M", l:"0.2 M", r:"0.3 M", ans:"RIGHT", expl:"I = 0.5 * sum(ci * zi^2) = 0.5 * (0.2*1^2 + 0.1*2^2) = 0.3 M."},
+        {id:"FAC_08", dom:"QUANTUM", q:"Uncertainty in velocity if Delta x = 1.0 A for an electron?", u:"5.8e5 m/s", l:"1.0e6 m/s", r:"5.8e5 m/s", ans:"RIGHT", expl:"Delta v = h / (4pi * m * Delta x). Calculation yields ~5.8e5 m/s."},
+        {id:"FAC_09", dom:"ANALYT", q:"Peak separation (Delta Ep) for a reversible 1-electron CV transfer?", u:"29 mV", l:"0 mV", r:"59 mV", ans:"RIGHT", expl:"For a reversible Nernstian couple, Delta Ep = 59/n mV at 25C."},
+        {id:"FAC_10", dom:"INORG", q:"Spin-only magnetic moment for Co2+ (d7) in tetrahedral field?", u:"1.73 BM", l:"4.90 BM", r:"3.87 BM", ans:"RIGHT", expl:"Tetrahedral is High Spin (e4 t2 3). 3 unpaired e-. sqrt(3*5) = 3.87 BM."},
+        {id:"FAC_11", dom:"ORGANIC", q:"Degree of unsaturation (DoU) for C6H10O?", u:"1", l:"3", r:"2", ans:"RIGHT", expl:"DoU = C + 1 - H/2 = 6 + 1 - 5 = 2. (Could be 2 rings, 2 pi bonds)."},
+        {id:"FAC_12", dom:"KINETIC", q:"For 2nd order (A->P), t=20min for 1.0M to 0.5M. Time to drop 0.5M to 0.25M?", u:"20 min", l:"60 min", r:"40 min", ans:"RIGHT", expl:"In 2nd order, half-life doubles as concentration halves. 20 * 2 = 40 min."},
+        {id:"FAC_13", dom:"STATMEC", q:"Rotational partition function (qr) for heteronuclear diatomic at high T?", u:"kT / hB", l:"kT / 2hcB", r:"kT / hcB", ans:"RIGHT", expl:"For sigma=1 (heteronuclear), qr = kT / hcB."},
+        {id:"FAC_14", dom:"INORG", q:"Why is 'Trans Influence' strong for high pi-acidity ligands?", u:"Donates e-", l:"Steric", r:"Orbital Competition", ans:"RIGHT", expl:"They withdraw density from the same metal d-orbitals used by the trans ligand, weakening its bond."},
+        {id:"FAC_15", dom:"ORGANIC", q:"In 'Robinson Annulation', what are the two sequential reactions?", u:"Aldol + Wittig", l:"Michael + Claisen", r:"Michael + Aldol", ans:"RIGHT", expl:"It begins with a Michael addition followed by an intramolecular Aldol condensation."},
+        {id:"FAC_16", dom:"QUANTUM", q:"Physical origin of 'Exchange Energy' in multi-electron systems?", u:"Coulomb", l:"Gravity", r:"Pauli + Coulomb", ans:"RIGHT", expl:"Antisymmetry keeps same-spin electrons apart (Fermi Hole), reducing their Coulomb repulsion."},
+        {id:"FAC_17", dom:"ANALYT", q:"Why use 'Internal Standard' in quantitative GC?", u:"Clean syringe", l:"Lower BP", r:"Ratio correction", ans:"RIGHT", expl:"It compensates for human error in injection volume or instrument drift."},
+        {id:"FAC_18", dom:"THERMO", q:"What implies a 'Negative' Volume of Activation (Delta V++)?", u:"Slower at high P", l:"No change", r:"Faster at high P", ans:"RIGHT", expl:"Negative means the Transition State is more compact, so Pressure accelerates it."},
+        {id:"FAC_19", dom:"INORG", q:"Why 'Inverse' Spinel for Fe3O4?", u:"Lattice Energy", l:"Size mismatch", r:"Site Preference", ans:"RIGHT", expl:"Fe(III) is d5 (0 CFSE). Fe(II) is d6 and gains stability in the octahedral B-site."},
+        {id:"FAC_20", dom:"ORGANIC", q:"'Endo' selectivity in Diels-Alder is due to?", u:"Sterics", l:"Entropy", r:"Pi-Overlap", ans:"RIGHT", expl:"Overlap between the pi-system of the substituent and the diene stabilizes the endo TS."},
+        {id:"FAC_21", dom:"KINETIC", q:"'Steady-State Approximation' implies?", u:"Conc = 0", l:"Time = infinity", r:"Rate form = Rate loss", ans:"RIGHT", expl:"It assumes d[I]/dt = 0 for highly reactive intermediates."},
+        {id:"FAC_22", dom:"ANALYT", q:"Why use 'Deuterated' solvent in NMR?", u:"Solubility", l:"Cooling", r:"Invisible Solvent", ans:"RIGHT", expl:"Deuterium resonates at a different frequency, making the solvent 'invisible' in 1H NMR."},
+        {id:"FAC_23", dom:"LAB", q:"Primary risk of heating a 'Closed System'?", u:"Solvent loss", l:"Slow rxn", r:"Explosion", ans:"RIGHT", expl:"PV=nRT. increasing T in fixed V causes massive P increase -> Explosion."},
+        {id:"FAC_24", dom:"LAB", q:"Why 'Acid to Water' during dilution?", u:"Mixing", l:"Speed", r:"Heat Safety", ans:"RIGHT", expl:"High heat capacity of water absorbs the exothermic energy safely."},
+        {id:"FAC_25", dom:"LAB", q:"Function of 'Boric Acid' in Kjeldahl method?", u:"Digest", l:"Catalyst", r:"Trap Ammonia", ans:"RIGHT", expl:"Ammonia distilled is captured in boric acid to form ammonium borate for titration."},
+        {id:"FAC_26", dom:"QUANTUM", q:"'Born-Oppenheimer' approx fails when?", u:"High Mass", l:"Relativistic", r:"Surfaces Touch", ans:"RIGHT", expl:"When energy gap vanishes (Conical Intersection), nuclear and electronic timescales mix."},
+        {id:"FAC_27", dom:"THERMO", q:"'Critical Opalescence' is caused by?", u:"Solidification", l:"Absorption", r:"Density Fluctuation", ans:"RIGHT", expl:"Near critical point, density fluctuations match light wavelength -> scattering."},
+        {id:"FAC_28", dom:"INORG", q:"'Jahn-Teller' distortion in d9 octahedral?", u:"Symmetry Up", l:"Sterics", r:"Lower Energy", ans:"RIGHT", expl:"Distorting splits the degenerate levels, putting the odd electron in a lower energy orbital."},
+        {id:"FAC_29", dom:"ORGANIC", q:"'Favorskii' rearrangement mechanism?", u:"Radical", l:"Carbocation", r:"Cyclopropanone", ans:"RIGHT", expl:"Base removes alpha-H, forming a cyclopropanone intermediate via internal SN2."},
+        {id:"FAC_30", dom:"STATMEC", q:"'Ergodicity' means?", u:"Entropy", l:"Chaos", r:"Time = Ensemble", ans:"RIGHT", expl:"The system visits all possible states over time, so one trace represents the whole group."}
     ];
 
     const request = indexedDB.open(DB_NAME, 1);
@@ -191,11 +159,10 @@
         const tx = db.transaction([STORE_NAME], "readonly");
         const count = tx.objectStore(STORE_NAME).count();
         count.onsuccess = () => {
-            if(count.result === 0) {
-                const wTx = db.transaction([STORE_NAME], "readwrite");
-                wTx.objectStore(STORE_NAME).put(DEMO_DATA, "FACULTY_DEMO");
-                wTx.oncomplete = refreshLibrary;
-            } else refreshLibrary();
+            // Force Reload Data for Stress Test
+            const wTx = db.transaction([STORE_NAME], "readwrite");
+            wTx.objectStore(STORE_NAME).put(DEMO_DATA, "FACULTY_DEMO");
+            wTx.oncomplete = refreshLibrary;
         }
     };
 
@@ -282,11 +249,10 @@
         bindPhysics(card, q);
     }
 
-    // --- PRECISION PHYSICS ENGINE (V-Logic) ---
     function bindPhysics(el, data) {
         let startX, startY, isDragging = false;
         
-        // Pivot Point: EXACT Bottom Center
+        // Pivot Point: Bottom Center
         const pivotX = window.innerWidth / 2;
         const pivotY = window.innerHeight;
 
@@ -303,50 +269,41 @@
             const cx = e.touches[0].clientX; 
             const cy = e.touches[0].clientY;
             
-            // 1. ANGLE CALCULATION (Relative to Pivot)
+            // Vector Calc
             const dx = cx - pivotX;
             const dy = cy - pivotY;
-            // atan2(x, -y) gives angle where 0 is UP, positive is RIGHT
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
             
-            // 2. THE 0.5 CM CLAMP (Approx 20px / 3 degrees)
-            // Even if user drags 300px, visual rotation is capped at 3 degrees
+            // V-Clamp: +/- 10 degrees
             let rot = angleDeg;
-            if (rot > 3) rot = 3;
-            if (rot < -3) rot = -3;
+            if (rot > 10) rot = 10;
+            if (rot < -10) rot = -10;
 
-            // 3. TRANSLATION CLAMP (Heaviness)
-            // We scale down the drag distance massively
-            const rawDragX = cx - startX;
-            const rawDragY = cy - startY;
-            
-            // "Heaviness Factor": Move 1px for every 8px dragged
-            const moveX = rawDragX * 0.12; 
-            const moveY = rawDragY * 0.12;
+            const dragX = cx - startX;
+            const dragY = cy - startY;
+
+            // 0.5 CM CLAMP (Approx 20px)
+            const moveX = dragX * 0.12; 
+            const moveY = dragY * 0.12;
 
             el.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
             
-            // 4. SENSITIVITY (Fade logic triggers FAST even if movement is slow)
-            // We use the raw drag distance for triggering, not the clamped movement
-            const dist = Math.sqrt(rawDragX*rawDragX + rawDragY*rawDragY);
-            const intensity = Math.min(dist / 100, 1); // Full fade at 100px drag
+            // Fade Logic
+            const dist = Math.sqrt(dragX*dragX + dragY*dragY);
+            const intensity = Math.min(dist / 150, 1);
             
             qText.style.opacity = Math.max(0, 1 - (intensity * 2.5));
             ovText.style.opacity = intensity;
             
             [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
 
-            // 5. ZONE LOGIC
-            // UP: Moving Up AND staying centered (within +/- 15 deg vector)
-            if (rawDragY < -40 && Math.abs(angleDeg) < 15) {
+            if (dragY < -40 && Math.abs(angleDeg) < 15) {
                 ovText.innerHTML = formatText(data.u_txt);
                 colUp.classList.add('active');
-            } 
-            else if (rawDragX > 40) {
+            } else if (dragX > 50) {
                 ovText.innerHTML = formatText(data.r_txt);
                 colRight.classList.add('active');
-            } 
-            else if (rawDragX < -40) {
+            } else if (dragX < -50) {
                 ovText.innerHTML = formatText(data.l_txt);
                 colLeft.classList.add('active');
             }
@@ -361,7 +318,6 @@
             const dy = e.changedTouches[0].clientY - pivotY;
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-            // Thresholds for Action (Needs significant drag intent)
             if (Math.abs(x) > 70 || y < -70) {
                 if (y < -70 && Math.abs(angleDeg) < 20) finishSwipe(el, data, "UP");
                 else if (x > 70) finishSwipe(el, data, "RIGHT");
