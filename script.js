@@ -3,7 +3,7 @@
 
     // --- 1. CONFIGURATION ---
     // YOUR LIVE URL IS HARDCODED HERE
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbz8iKy59CSXNWl19EDjdyv8QiiKqyOkR6s8e9KHA9zse9k1Ze-POZCKstbYAVfBnw0EfQ/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxm67YgOeeK9LbiwFzz3E9oXAFo_9-ys6UfriZZzkkMz-TNCKhNleJZukTJNHPBvLvkdQ/exec";
     const SESSION_ID = "FAC_" + Date.now().toString().slice(-5);
     let INDEX = 0, SCORE = 0, POOL = [];
 
