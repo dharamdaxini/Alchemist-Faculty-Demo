@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | DEAD ZONE FIXED</title>
+    <title>ALCHEMIST | SMOOTH TRANSITION</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,26 +51,32 @@
             background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); 
             display: flex; flex-direction: column; 
             box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6); 
-            /* PIVOT: The "Yellow Line" is roughly here */
-            transform-origin: 50% 100%; 
+            transform-origin: 50% 100%; /* PIVOT */
             will-change: transform; overflow: hidden;
         }
 
-        .card-top { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; transition: opacity 0.2s; }
-        .card-q { font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.2rem); font-weight: 600; line-height: 1.3; color: #fff; transition: opacity 0.1s; }
+        .card-top { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         
+        /* Question Text (Starts Visible) */
+        .card-q { 
+            font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.2rem); 
+            font-weight: 600; line-height: 1.3; color: #fff; 
+            transition: opacity 0.05s linear; /* Ultra fast response */
+        }
+        
+        /* Option Overlay (Starts Invisible) */
         .card-overlay-text { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             font-family: var(--font-book); font-size: 2rem; font-weight: 600; color: #fff; 
             opacity: 0; pointer-events: none; width: 90%; text-align: center; 
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: opacity 0.1s; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.9); 
+            transition: opacity 0.05s linear;
         }
 
-        /* VERTICAL DOCK */
+        /* DOCK */
         .card-dock { 
             min-height: 220px; background: var(--dock-bg); 
-            /* THE YELLOW LINE */
-            border-top: 2px solid var(--gold); 
+            border-top: 2px solid var(--gold); /* The Yellow Line */
             display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; padding: 10px 0; transition: background 0.2s;
         }
         .card-dock.analysis-mode { background: rgba(251, 191, 36, 0.1); }
@@ -83,7 +89,6 @@
         .dock-label { font-size: 0.6rem; font-weight: 800; color: var(--text-sub); letter-spacing: 1px; text-transform: uppercase; width: 60px; flex-shrink: 0; text-align: left; }
         .dock-val { font-family: var(--font-book); font-size: 1.1rem; color: var(--text-main); font-weight: 600; opacity: 0.8; text-align: right; line-height: 1.3; flex: 1; padding-left: 12px; white-space: normal; word-break: break-word; }
         
-        /* Active State */
         .dock-col.active { background: rgba(56, 189, 248, 0.1); }
         .dock-col.active .dock-val { color: var(--accent); opacity: 1; }
 
@@ -100,7 +105,7 @@
 <body>
 
     <div id="portal">
-        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Dead Zone V152</div></div>
+        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Cross-Fade V153</div></div>
         <div id="library"></div>
         <div style="margin-top:auto;">
             <div class="section-label">System Tools</div>
@@ -130,7 +135,7 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
     const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
     let db, INDEX = 0, SCORE = 0, POOL = [];
-    const DB_NAME = "AlchemistDB_V152", STORE_NAME = "Vaults";
+    const DB_NAME = "AlchemistDB_V153", STORE_NAME = "Vaults";
 
     // --- FULL 30 QUESTION STRESS TEST DATA ---
     const DEMO_DATA = [
@@ -262,11 +267,11 @@
         bindPhysics(card, q);
     }
 
-    // --- PHYSICS: HARD BOUNDARY DEAD ZONE ---
+    // --- PHYSICS: SMOOTH CROSS-FADE ---
     function bindPhysics(el, data) {
         let startX, startY, isDragging = false;
         
-        // Pivot: Top of the Dock Area (approx 220px from bottom)
+        // Pivot: Top of Dock (approx 220px from bottom)
         const pivotY = window.innerHeight - 220; 
         const pivotX = window.innerWidth / 2;
 
@@ -287,14 +292,13 @@
             // --- DEAD ZONE LOGIC (Below Pivot) ---
             if (cy > pivotY) {
                 const dx = cx - startX; const dy = cy - startY;
-                // Move card slightly for feedback
-                el.style.transform = `translate(${dx*0.1}px, ${dy*0.3}px)`;
+                el.style.transform = `translate(${dx*0.1}px, ${dy*0.3}px)`; // Dampened
                 
-                // FORCE UI RESET (No Highlight)
+                // RESET UI
                 qText.style.opacity = 1; ovText.style.opacity = 0;
                 [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
                 
-                // Show Analysis Trigger (Gold) if dragged far down
+                // Analysis Trigger
                 if(dy > 100) {
                     qText.style.opacity = 0; ovText.style.opacity = 1; 
                     ovText.innerText = "ANALYSIS"; ovText.style.color = "var(--gold)";
@@ -305,7 +309,7 @@
                 return;
             }
 
-            // --- STANDARD ZONE (Above Pivot) ---
+            // --- ACTIVE ZONE (Above Pivot) ---
             dock.classList.remove('analysis-mode');
             ovText.style.color = "#fff";
 
@@ -313,11 +317,9 @@
             const dy = cy - pivotY; 
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
             
-            // 5 DEGREE CLAMP
             let rot = angleDeg;
             if (rot > 5) rot = 5; if (rot < -5) rot = -5;
 
-            // 0.5 CM TRANSLATION
             const dragX = cx - startX;
             const dragY = cy - startY;
             const moveX = dragX * 0.12; 
@@ -325,24 +327,28 @@
 
             el.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
             
-            // HARD STRETCH OPACITY (150px)
+            // --- SMOOTH CROSS-FADE LOGIC ---
+            // Requirement: Immediate morphing as you drag
             const dist = Math.sqrt(dragX*dragX + dragY*dragY);
-            const intensity = Math.min(dist / 150, 1);
             
-            qText.style.opacity = Math.max(0, 1 - (intensity * 3));
-            ovText.style.opacity = intensity;
+            // Linear Progress: 0 to 1 over 120px
+            const progress = Math.min(dist / 120, 1);
+            
+            // Synchronized Fade: Question vanishes as Answer appears
+            qText.style.opacity = 1 - progress; 
+            ovText.style.opacity = progress;
             
             [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
 
             if (dragY < -40 && Math.abs(angleDeg) < 10) {
                 ovText.innerHTML = formatText(data.u_txt); 
-                if(intensity > 0.3) colUp.classList.add('active'); // Hard threshold
+                if(progress > 0.1) colUp.classList.add('active'); // Early highlight
             } else if (dragX > 40) {
                 ovText.innerHTML = formatText(data.r_txt); 
-                if(intensity > 0.3) colRight.classList.add('active');
+                if(progress > 0.1) colRight.classList.add('active');
             } else if (dragX < -40) {
                 ovText.innerHTML = formatText(data.l_txt); 
-                if(intensity > 0.3) colLeft.classList.add('active');
+                if(progress > 0.1) colLeft.classList.add('active');
             }
         });
 
@@ -353,7 +359,7 @@
             // DEAD ZONE RELEASE
             if (y > pivotY) { 
                 const dy = e.changedTouches[0].clientY - startY;
-                if (dy > 100) finishSwipe(el, data, "DOWN"); // Analysis trigger
+                if (dy > 100) finishSwipe(el, data, "DOWN"); 
                 else resetCard(el);
                 return; 
             }
@@ -366,8 +372,8 @@
             const dy = e.changedTouches[0].clientY - pivotY;
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-            // HARD STRETCH COMMIT (Must drag > 150px)
-            if (dist > 150) {
+            // COMMIT THRESHOLD (Still requires full drag)
+            if (dist > 120) {
                 if (dragY < -60 && Math.abs(angleDeg) < 15) finishSwipe(el, data, "UP");
                 else if (x > 60) finishSwipe(el, data, "RIGHT");
                 else if (x < -60) finishSwipe(el, data, "LEFT");
@@ -388,7 +394,6 @@
     }
 
     function finishSwipe(el, data, dir) {
-        // ANALYSIS
         if(dir === "DOWN") {
             el.style.transition='transform 0.4s ease-in';
             el.style.transform=`translate(0px, 100vh)`;
@@ -397,7 +402,6 @@
             return;
         }
 
-        // ANSWERS
         let tx = dir === "RIGHT" ? window.innerWidth : (dir === "LEFT" ? -window.innerWidth : 0);
         let ty = dir === "UP" ? -window.innerHeight : 0;
         let rot = dir === "RIGHT" ? 5 : (dir === "LEFT" ? -5 : 0);
