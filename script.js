@@ -37,6 +37,60 @@ function bindPhysics(el, data) {
         const dragY = cy - startY;
         const dist = Math.sqrt(dragX * dragX + dragY * dragY);
 
+        // Replacement logic for the <script> section
+let POOL = [];
+let INDEX = 0, SCORE = 0;
+
+async function initializeEngine() {
+    try {
+        const response = await fetch('chemistry_master.json');
+        if (!response.ok) throw new Error('Network response was not ok');
+        POOL = await response.json();
+        
+        // Safety check for empty data
+        if (POOL.length > 0) {
+            renderCard();
+        } else {
+            document.getElementById('stage').innerHTML = "Error: Dataset is empty.";
+        }
+    } catch (error) {
+        console.error("Failed to load chemistry curriculum:", error);
+        document.getElementById('stage').innerHTML = "Initialization Error: chemistry_master.json not found.";
+    }
+}
+
+// Update renderCard() to include the Rank A "Hard Stretch" logic check
+function renderCard() {
+    if (INDEX >= POOL.length) { renderEnd(); return; }
+    const data = POOL[INDEX];
+    
+    // UI Metadata updates
+    document.getElementById('domain-label').innerText = `${data.domain} | ${data.id}`;
+    document.getElementById('val-u').innerHTML = data.opt_up;
+    document.getElementById('val-r').innerHTML = data.opt_right;
+    document.getElementById('val-l').innerHTML = data.opt_left;
+
+    const card = document.createElement('div');
+    card.className = "card";
+    
+    // Expert Signal Check for Rank A
+    const rankClass = data.rank === 'A' ? 'rank-tag rank-a-glow' : 'rank-tag';
+    card.innerHTML = `
+        <div class="${rankClass}">RANK ${data.rank}</div>
+        <div class="card-top">
+            <div class="goal-header">${data.goal}</div>
+            <div class="card-q" id="q-text">${data.question}</div>
+            <div class="card-overlay-text" id="ov-text"></div>
+        </div>`;
+    
+    document.getElementById('stage').appendChild(card);
+    bindPhysics(card, data);
+}
+
+// Call initializer instead of renderCard directly
+initializeEngine();
+
+
         // 1. DEAD ZONE LOGIC (Below Yellow Line)
         if (cy > pivotY) {
             // Loose feedback: card detaches and slides slightly
