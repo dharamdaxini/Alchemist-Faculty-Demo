@@ -88,66 +88,81 @@
     </div>
 
 <script>
-/**
- * CANONICAL V170_MASTER_SET
- * Integrated logic-first curriculum for Chemistry Experts.
- */
-const POOL = [
+const V170_MASTER_SET = [
   {
-    "id": "MSTR_001", "rank": "E", "domain": "PHYSICAL", "goal": "Thermodynamic Work",
-    "question": "In a reversible isothermal expansion of an ideal gas, what is the work formula?",
-    "opt_up": "<i>w</i> = −<i>nRT</i> ln(<i>V</i><sub>2</sub>/<i>V</i><sub>1</sub>)", "opt_right": "<i>w</i> = −<i>P</i>Δ<i>V</i>", "opt_left": "<i>w</i> = Δ<i>U</i>",
-    "correct": "UP", "expl_up": "CORRECT. Reversible work involves integrating P_int across the volume change.",
-    "expl_right": "INCORRECT. This applies to irreversible constant external pressure processes.",
+    "id": "MSTR_001",
+    "rank": "E",
+    "domain": "PHYSICAL",
+    "goal": "Thermodynamic Work Definitions",
+    "question": "In a reversible isothermal expansion of an ideal gas, what is the formula for the work done by the system?",
+    "opt_up": "<i>w</i> = −<i>nRT</i> ln(<i>V</i><sub>2</sub>/<i>V</i><sub>1</sub>)",
+    "opt_right": "<i>w</i> = −<i>P</i>Δ<i>V</i>",
+    "opt_left": "<i>w</i> = Δ<i>U</i>",
+    "correct": "UP",
+    "expl_up": "CORRECT. Reversible work requires integration over a variable pressure path.",
+    "expl_right": "INCORRECT. PΔV applies to constant external pressure (irreversible) expansion.",
     "expl_left": "INCORRECT. ΔU is zero for isothermal ideal gas expansion; work is not ΔU.",
-    "analysis": "<b>Physical Principle:</b> For a reversible process, P<sub>ext</sub> = P<sub>int</sub>. Integrating <i>dw</i> = −<i>P</i>d<i>V</i> with <i>P</i> = <i>nRT</i>/<i>V</i> yields the logarithmic work expression.",
-    "next_steps": "1. Compare work done in reversible vs irreversible paths on a P-V diagram. 2. Derive work for adiabatic processes."
+    "analysis": "<b>Physical Principle:</b> For a reversible process, <i>P</i><sub>ext</sub> = <i>P</i><sub>int</sub>. Integrating <i>dw</i> = −<i>P</i>d<i>V</i> with <i>P</i> = <i>nRT</i>/<i>V</i> yields the logarithmic work expression.",
+    "next_steps": "1. Compare work in reversible vs irreversible paths. 2. Derive adiabatic work expressions."
   },
   {
-    "id": "MSTR_077", "rank": "A", "domain": "ORGANIC", "goal": "Curtin-Hammett Principle",
-    "question": "In interconverting conformers A ⇌ B, what determines the product ratio P<sub>A</sub> : P<sub>B</sub>?",
-    "opt_up": "Relative energies of transition states", "opt_right": "Relative populations of conformers", "opt_left": "Speed of interconversion alone",
-    "correct": "UP", "expl_up": "CORRECT. Selectivity is a function of the free energy difference between transition states.",
-    "expl_right": "TRAP. Ground-state stability does not dictate product outcome in fast-equilibrating systems.",
-    "expl_left": "INCOMPLETE. Interconversion must be fast, but TS energies determine the actual ratio.",
-    "analysis": "<b>Physical Principle:</b> The <b>Curtin-Hammett Principle</b> states that product distribution depends only on the relative energies of the transition states, regardless of ground-state populations.",
-    "next_steps": "1. Research the deamination of 4-t-butylcyclohexylamines. 2. Model conformer kinetics using Python simulations."
+    "id": "MSTR_002",
+    "rank": "E",
+    "domain": "PHYSICAL",
+    "goal": "Chemical Potential Basics",
+    "question": "Which quantity equalizes at equilibrium between two phases of a pure substance?",
+    "opt_up": "Chemical potential",
+    "opt_right": "Molar enthalpy",
+    "opt_left": "Molar entropy",
+    "correct": "UP",
+    "expl_up": "CORRECT. Equality of chemical potential (μ) is the fundamental criterion for phase equilibrium.",
+    "expl_right": "INCORRECT. Enthalpy does not necessarily equalize; think of latent heat during phase change.",
+    "expl_left": "INCORRECT. Entropy typically increases or decreases during phase transitions (e.g., boiling).",
+    "analysis": "<b>Physical Principle:</b> At equilibrium between phases, the chemical potential (μ) of the substance is identical in all phases, ensuring no net mass transfer.",
+    "next_steps": "1. Derive equilibrium conditions from Gibbs energy. 2. Apply μ-equality to phase diagrams."
   },
   {
-    "id": "MSTR_102", "rank": "A", "domain": "KINETICS", "goal": "Marcus Inverted Region",
-    "question": "In Marcus Theory, what happens to the rate when −Δ<i>G</i>° exceeds reorganization energy (λ)?",
-    "opt_up": "The reaction rate decreases", "opt_right": "The reaction rate increases", "opt_left": "The reaction rate remains constant",
-    "correct": "UP", "expl_up": "CORRECT. The crossing point of potential energy surfaces moves back, increasing the barrier.",
-    "expl_right": "TRAP. This intuition fails in the highly exothermic inverted regime.",
-    "expl_left": "INCORRECT. The rate is highly sensitive to changes in the driving force in this region.",
-    "analysis": "<b>Physical Principle:</b> In the <b>Marcus Inverted Region</b>, the activation energy increases as the reaction becomes more exothermic (−ΔG° > λ), slowing the rate.",
-    "next_steps": "1. Analyze photosynthetic charge separation. 2. Calculate reorganization energy via DFT."
+    "id": "MSTR_102",
+    "rank": "A",
+    "domain": "KINETICS",
+    "goal": "Marcus Inverted Region",
+    "question": "In Marcus Theory, what happens to the rate as driving force (−Δ<i>G</i>°) exceeds reorganization energy (λ)?",
+    "opt_up": "The rate decreases",
+    "opt_right": "The rate increases",
+    "opt_left": "The rate stays constant",
+    "correct": "UP",
+    "expl_up": "CORRECT. In the 'Inverted Region', the activation barrier increases as exothermicity grows.",
+    "expl_right": "TRAP. This ignores the parabolic nature of the activation energy relationship.",
+    "expl_left": "INCORRECT. The rate is highly sensitive to the driving force in this regime.",
+    "analysis": "<b>Physical Principle:</b> (TRAP) In the <b>Inverted Region</b>, the crossing point of the energy parabolas moves back to a higher position as the product curve drops, increasing the barrier.",
+    "next_steps": "1. Study charge separation in photosynthesis. 2. Model ET rates using the Marcus equation."
   }
-  /* PASTE ALL REMAINING JSON OBJECTS FROM YOUR MERGER EXPORT HERE */
+  // ... Paste the rest of your 100 questions here
 ];
 
+const POOL = V170_MASTER_SET;
 let INDEX = 0, SCORE = 0;
 
 function renderCard() {
     if (INDEX >= POOL.length) { renderEnd(); return; }
     const data = POOL[INDEX];
     
-    document.getElementById('meta-label').innerText = data.domain + " | " + data.id;
+    document.getElementById('domain-label').innerText = `${data.domain} | ${data.id}`;
     document.getElementById('val-u').innerHTML = data.opt_up;
     document.getElementById('val-r').innerHTML = data.opt_right;
     document.getElementById('val-l').innerHTML = data.opt_left;
 
     const card = document.createElement('div');
     card.className = "card";
+    const rankClass = data.rank === 'A' ? 'rank-tag rank-a-glow' : 'rank-tag';
     
-    // UI Fix: Using standard concatenation to avoid template string interpolation bugs in mobile browsers
-    const rankClass = (data.rank === 'A') ? "rank-tag rank-a-glow" : "rank-tag";
-    card.innerHTML = '<div class="' + rankClass + '">RANK ' + data.rank + '</div>' +
-                     '<div class="card-top">' +
-                     '<div class="goal-header">' + data.goal + '</div>' +
-                     '<div class="card-q" id="q-text">' + data.question + '</div>' +
-                     '<div class="card-overlay-text" id="ov-text"></div>' +
-                     '</div>';
+    card.innerHTML = `
+        <div class="${rankClass}">RANK ${data.rank}</div>
+        <div class="card-top">
+            <div class="goal-header">${data.goal}</div>
+            <div class="card-q" id="q-text">${data.question}</div>
+            <div class="card-overlay-text" id="ov-text"></div>
+        </div>`;
     
     document.getElementById('stage').appendChild(card);
     bindPhysics(card, data);
@@ -167,20 +182,20 @@ function bindPhysics(el, data) {
     window.addEventListener('touchmove', e => {
         if (!isDragging) return;
         const cx = e.touches[0].clientX, cy = e.touches[0].clientY;
-        const dist = Math.sqrt(Math.pow(cx - startX, 2) + Math.pow(cy - startY, 2));
-        let angle = Math.atan2(cx - pivotX, -(cy - pivotY)) * (180 / Math.PI);
+        const drag_dist = Math.sqrt(Math.pow(cx - startX, 2) + Math.pow(cy - startY, 2));
         
-        el.style.transform = 'rotate(' + Math.max(-8, Math.min(8, angle)) + 'deg)';
-        const progress = Math.min(Math.max(0, dist - 20) / 80, 1);
+        let angleDeg = Math.atan2(cx - pivotX, -(cy - pivotY)) * (180 / Math.PI);
+        el.style.transform = `rotate(${Math.max(-8, Math.min(8, angleDeg))}deg)`;
+        const progress = Math.min(Math.max(0, drag_dist - 20) / 80, 1);
         qText.style.opacity = 1 - progress;
         ovText.style.opacity = progress;
 
         Object.values(cols).forEach(c => c.classList.remove('active'));
         let sel = "UP";
-        if (angle < -15) sel = "LEFT"; else if (angle > 15) sel = "RIGHT";
+        if (angleDeg < -15) sel = "LEFT"; else if (angleDeg > 15) sel = "RIGHT";
         
         cols[sel].classList.add('active');
-        ovText.innerHTML = '<span style="font-size:0.8rem; color:var(--gold); display:block; margin-bottom:8px;">HEURISTIC</span>' + data['expl_' + sel.toLowerCase()];
+        ovText.innerHTML = `<span style="font-size:0.8rem; color:var(--gold); display:block; margin-bottom:8px;">HEURISTIC</span>` + data['expl_' + sel.toLowerCase()];
     });
 
     window.addEventListener('touchend', e => {
@@ -189,8 +204,7 @@ function bindPhysics(el, data) {
         const totalDrag = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
         const angle = Math.atan2(endX - pivotX, -(endY - pivotY)) * (180 / Math.PI);
 
-        // EXPERT DIFFERENTIATOR: Rank A requires 160px drag, standard requires 110px
-        const threshold = (data.rank === "A") ? 160 : 110;
+        const threshold = data.rank === "A" ? 160 : 110;
 
         if (totalDrag > threshold) {
             let dir = "UP";
@@ -201,21 +215,21 @@ function bindPhysics(el, data) {
 }
 
 function finishSwipe(el, data, dir) {
-    const isCorrect = (dir === data.correct);
+    const corr = (dir === data.correct);
     el.style.transition = 'transform 0.4s ease-in, opacity 0.4s';
     el.style.opacity = '0';
-    el.style.transform = 'translate(' + (dir === "UP" ? 0 : (dir === "LEFT" ? -500 : 500)) + 'px, ' + (dir === "UP" ? -500 : 0) + 'px)';
+    el.style.transform = `translate(${dir === "UP" ? 0 : (dir === "LEFT" ? -500 : 500)}px, ${dir === "UP" ? -500 : 0}px)`;
     
-    if(isCorrect) SCORE++;
-    document.getElementById('score-disp').innerText = "MASTERY: " + Math.round((SCORE/(INDEX+1))*100) + "%";
-    document.getElementById('progress').style.width = ((INDEX+1)/POOL.length)*100 + "%";
+    SCORE += corr ? 1 : 0;
+    document.getElementById('score-disp').innerText = Math.round((SCORE/(INDEX+1))*100)+"% MASTERY";
+    document.getElementById('progress').style.width = ((INDEX+1)/POOL.length)*100+"%";
     
     setTimeout(() => { showAnalysis(data); el.remove(); }, 300);
 }
 
 function showAnalysis(data) {
     document.getElementById('modal-analysis').innerHTML = data.analysis;
-    const steps = data.next_steps.split('. ').map(s => '<div class="next-step-item">' + s + '</div>').join('');
+    const steps = data.next_steps.split('. ').map(s => `<div class="next-step-item">${s}</div>`).join('');
     document.getElementById('modal-next').innerHTML = steps;
     document.getElementById('analysis-modal').classList.add('open');
 }
@@ -225,8 +239,8 @@ function closeModal() {
     INDEX++; renderCard(); 
 }
 
-function resetCard(el) { el.style.transition = '0.3s ease'; el.style.transform = 'rotate(0deg)'; el.querySelector('#q-text').style.opacity = 1; el.querySelector('#ov-text').style.opacity = 0; }
-function renderEnd() { document.getElementById('stage').innerHTML = '<div class="card" style="justify-content:center; align-items:center;"><div class="card-q">CALIBRATION COMPLETE</div><button class="modal-btn" onclick="location.reload()" style="width:80%; margin-top:30px;">RESTART</button></div>'; }
+function resetCard(el) { el.style.transition = 'transform 0.3s ease'; el.style.transform = 'rotate(0deg)'; el.querySelector('#q-text').style.opacity = 1; el.querySelector('#ov-text').style.opacity = 0; }
+function renderEnd() { document.getElementById('stage').innerHTML = `<div class="card" style="justify-content:center; align-items:center; border-bottom: 1px solid var(--border);"><div class="card-q">CALIBRATION COMPLETE</div><div style="font-size:0.8rem; margin-top:20px; color:var(--accent);">FINAL SCORE: ${document.getElementById('score-disp').innerText}</div><button class="modal-btn" onclick="location.reload()" style="width:80%; margin-top:30px;">RESTART</button></div>`; }
 
 renderCard();
 </script>
