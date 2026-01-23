@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | SMOOTH TRANSITION</title>
+    <title>ALCHEMIST | SAFETY CIRCLE V155</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,27 +51,13 @@
             background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); 
             display: flex; flex-direction: column; 
             box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6); 
-            transform-origin: 50% 100%; /* PIVOT */
+            transform-origin: 50% 100%; 
             will-change: transform; overflow: hidden;
         }
 
         .card-top { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
-        
-        /* Question Text (Starts Visible) */
-        .card-q { 
-            font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.2rem); 
-            font-weight: 600; line-height: 1.3; color: #fff; 
-            transition: opacity 0.05s linear; /* Ultra fast response */
-        }
-        
-        /* Option Overlay (Starts Invisible) */
-        .card-overlay-text { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-family: var(--font-book); font-size: 2rem; font-weight: 600; color: #fff; 
-            opacity: 0; pointer-events: none; width: 90%; text-align: center; 
-            text-shadow: 0 10px 30px rgba(0,0,0,0.9); 
-            transition: opacity 0.05s linear;
-        }
+        .card-q { font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.2rem); font-weight: 600; line-height: 1.3; color: #fff; transition: opacity 0.05s linear; }
+        .card-overlay-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-book); font-size: 2rem; font-weight: 600; color: #fff; opacity: 0; pointer-events: none; width: 90%; text-align: center; text-shadow: 0 10px 30px rgba(0,0,0,0.9); transition: opacity 0.05s linear; }
 
         /* DOCK */
         .card-dock { 
@@ -105,7 +91,7 @@
 <body>
 
     <div id="portal">
-        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Cross-Fade V153</div></div>
+        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Safety Circle V155</div></div>
         <div id="library"></div>
         <div style="margin-top:auto;">
             <div class="section-label">System Tools</div>
@@ -135,7 +121,7 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
     const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
     let db, INDEX = 0, SCORE = 0, POOL = [];
-    const DB_NAME = "AlchemistDB_V153", STORE_NAME = "Vaults";
+    const DB_NAME = "AlchemistDB_V155", STORE_NAME = "Vaults";
 
     // --- FULL 30 QUESTION STRESS TEST DATA ---
     const DEMO_DATA = [
@@ -267,11 +253,11 @@
         bindPhysics(card, q);
     }
 
-    // --- PHYSICS: SMOOTH CROSS-FADE ---
+    // --- PHYSICS: SAFETY CIRCLE (0.5cm) ---
     function bindPhysics(el, data) {
         let startX, startY, isDragging = false;
         
-        // Pivot: Top of Dock (approx 220px from bottom)
+        // Pivot: Top of Dock
         const pivotY = window.innerHeight - 220; 
         const pivotX = window.innerWidth / 2;
 
@@ -289,12 +275,12 @@
             const cx = e.touches[0].clientX; 
             const cy = e.touches[0].clientY;
             
-            // --- DEAD ZONE LOGIC (Below Pivot) ---
+            // 1. DEAD ZONE (Below Pivot)
             if (cy > pivotY) {
                 const dx = cx - startX; const dy = cy - startY;
-                el.style.transform = `translate(${dx*0.1}px, ${dy*0.3}px)`; // Dampened
+                el.style.transform = `translate(${dx*0.1}px, ${dy*0.3}px)`;
                 
-                // RESET UI
+                // Clear UI
                 qText.style.opacity = 1; ovText.style.opacity = 0;
                 [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
                 
@@ -309,10 +295,10 @@
                 return;
             }
 
-            // --- ACTIVE ZONE (Above Pivot) ---
             dock.classList.remove('analysis-mode');
             ovText.style.color = "#fff";
 
+            // 2. VECTOR LOGIC
             const dx = cx - pivotX;
             const dy = cy - pivotY; 
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
@@ -327,14 +313,23 @@
 
             el.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
             
-            // --- SMOOTH CROSS-FADE LOGIC ---
-            // Requirement: Immediate morphing as you drag
+            // 3. SAFETY CIRCLE CHECK (Noise Filter)
             const dist = Math.sqrt(dragX*dragX + dragY*dragY);
+            const NOISE_RADIUS = 40; // 0.5cm approx
+
+            if (dist < NOISE_RADIUS) {
+                // Inside safety circle: Card moves, but UI frozen
+                qText.style.opacity = 1; 
+                ovText.style.opacity = 0;
+                [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
+                return; 
+            }
+
+            // 4. ACTIVE ZONE (Passed Safety Circle)
+            // Use (dist - NOISE_RADIUS) so fade starts smoothly AFTER the circle
+            const activeDist = dist - NOISE_RADIUS;
+            const progress = Math.min(activeDist / 120, 1);
             
-            // Linear Progress: 0 to 1 over 120px
-            const progress = Math.min(dist / 120, 1);
-            
-            // Synchronized Fade: Question vanishes as Answer appears
             qText.style.opacity = 1 - progress; 
             ovText.style.opacity = progress;
             
@@ -342,7 +337,7 @@
 
             if (dragY < -40 && Math.abs(angleDeg) < 10) {
                 ovText.innerHTML = formatText(data.u_txt); 
-                if(progress > 0.1) colUp.classList.add('active'); // Early highlight
+                if(progress > 0.1) colUp.classList.add('active');
             } else if (dragX > 40) {
                 ovText.innerHTML = formatText(data.r_txt); 
                 if(progress > 0.1) colRight.classList.add('active');
@@ -372,8 +367,8 @@
             const dy = e.changedTouches[0].clientY - pivotY;
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-            // COMMIT THRESHOLD (Still requires full drag)
-            if (dist > 120) {
+            // COMMIT THRESHOLD (Must drag > 150px total)
+            if (dist > 150) {
                 if (dragY < -60 && Math.abs(angleDeg) < 15) finishSwipe(el, data, "UP");
                 else if (x > 60) finishSwipe(el, data, "RIGHT");
                 else if (x < -60) finishSwipe(el, data, "LEFT");
