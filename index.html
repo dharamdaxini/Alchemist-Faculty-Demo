@@ -1,84 +1,36 @@
-<script>
-// 1. PANIC DEBUGGER
-window.onerror = function(m, u, l) { alert("Engine Halt: " + m + " at line " + l); return false; };
-
-// 2. V170 MASTER DATA POOL (Note: Name matches your screenshots)
-const MASTER_POOL = [
-    {
-        "id": "MSTR_001",
-        "rank": "E",
-        "domain": "PHYSICAL",
-        "goal": "Thermodynamic Work Definitions",
-        "question": "In a reversible isothermal expansion of an ideal gas, what is the formula for the work done by the system?",
-        "opt_up": "<i>w</i> = -<i>nRT</i> ln(<i>V</i><sub>2</sub>/<i>V</i><sub>1</sub>)",
-        "opt_right": "<i>w</i> = -<i>P</i>Δ<i>V</i>",
-        "opt_left": "<i>w</i> = Δ<i>U</i>",
-        "correct": "UP",
-        "expl_up": "Recall the integral of P dV when external and internal pressures are balanced."
-    }
-    /* PASTE REMAINING 101 QUESTIONS BELOW THIS LINE */
-    /* ENSURE NO STRAY TEXT LIKE "SAMPLE ITEMS" AT THE END */
-];
-
-// 3. CORE ENGINE LOGIC
-let currentIndex = 0;
-const dock = document.getElementById('card-dock');
-
-function renderCard(index) {
-    if (!dock) return;
-    if (index >= MASTER_POOL.length) {
-        dock.innerHTML = "<div class='card'><div class='content'>Mastery Complete.</div></div>";
-        return;
-    }
-
-    const data = MASTER_POOL[index];
-    const card = document.createElement('div');
-    card.className = 'card' + (data.rank === 'A' ? ' rank-a-pulse' : '');
-    
-    // UI Construction using your data keys: 'question' and 'id'
-    let html = '<div class="content">' + data.question + '</div>';
-    html += '<div class="meta">RANK ' + data.rank + ' | ID: ' + data.id + '</div>';
-    card.innerHTML = html;
-
-    let startX = 0, dist = 0;
-    const threshold = (data.rank === 'A') ? 160 : 110;
-
-    card.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].pageX;
-    }, {passive: true});
-
-    card.addEventListener('touchmove', function(e) {
-        dist = e.touches[0].pageX - startX;
-        card.style.transform = 'translateX(' + dist + 'px) rotate(' + (dist/15) + 'deg)';
-    }, {passive: true});
-
-    card.addEventListener('touchend', function() {
-        if (Math.abs(dist) > threshold) {
-            card.style.transition = '0.3s';
-            card.style.transform = 'translateX(' + (dist > 0 ? 1000 : -1000) + 'px)';
-            setTimeout(nextCard, 200);
-        } else {
-            card.style.transform = 'translateX(0) rotate(0)';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Alchemist V170</title>
+    <style>
+        :root { --bg: #05070a; --card: #12151c; --accent: #4a90e2; --rankA: #ff4b2b; }
+        body { background: var(--bg); color: white; font-family: -apple-system, system-ui; margin: 0; overflow: hidden; }
+        #header { padding: 20px; display: flex; justify-content: space-between; border-bottom: 1px solid #222; font-size: 12px; font-weight: 700; }
+        #card-dock { position: relative; height: 70vh; width: 90%; margin: 5vh auto; }
+        .card { 
+            position: absolute; width: 100%; height: 100%; background: var(--card); 
+            border-radius: 12px; border: 1px solid #333; display: flex; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); touch-action: none; transition: transform 0.1s ease-out;
         }
-    });
+        .rank-a-pulse { animation: pulse 1.5s infinite; border-color: var(--rankA) !important; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,75,43,0.4); } 70% { box-shadow: 0 0 0 15px rgba(255,75,43,0); } 100% { box-shadow: 0 0 0 0 rgba(255,75,43,0); } }
+        .content { padding: 25px; flex-grow: 1; font-size: 18px; line-height: 1.4; }
+        .meta { padding: 15px; background: rgba(0,0,0,0.2); font-size: 11px; color: #888; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+    </style>
+</head>
+<body>
 
-    dock.appendChild(card);
-}
+<div id="header">
+    <span>ALCHEMIST V170</span>
+    <span id="mastery">MASTERY: 0%</span>
+</div>
 
-function nextCard() {
-    currentIndex++;
-    dock.innerHTML = '';
-    renderCard(currentIndex);
-    const masteryEl = document.getElementById('mastery');
-    if(masteryEl) masteryEl.innerText = 'MASTERY: ' + Math.round((currentIndex/MASTER_POOL.length)*100) + '%';
-}
+<div id="card-dock"></div>
 
-// 4. BOOT SEQUENCE
-window.onload = function() {
-    if (typeof MASTER_POOL !== 'undefined' && MASTER_POOL.length > 0) {
-        renderCard(0);
-    } else {
-        alert("CRITICAL: Data Pool is empty or undefined.");
-    }
-};
-</script>
+<script src="data.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
