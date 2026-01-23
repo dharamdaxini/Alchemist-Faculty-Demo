@@ -1,4 +1,4 @@
-const V170_MASTER_SET = [
+const MASTER_SET = [
   {
     "id": "MSTR_001",
     "rank": "E",
