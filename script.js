@@ -1,31 +1,27 @@
-<script>
+/* script.js */
+
 // 1. PANIC DEBUGGER
-window.onerror = function(m, u, l) { alert("Engine Halt: " + m + " at line " + l); return false; };
+window.onerror = function(m, u, l) {
+    alert("FATAL ERROR: " + m + "\nLine: " + l);
+    return false;
+};
 
-// 2. V170 MASTER DATA POOL (Note: Name matches your screenshots)
-const MASTER_POOL = [
-    {
-        "id": "MSTR_001",
-        "rank": "E",
-        "domain": "PHYSICAL",
-        "goal": "Thermodynamic Work Definitions",
-        "question": "In a reversible isothermal expansion of an ideal gas, what is the formula for the work done by the system?",
-        "opt_up": "<i>w</i> = -<i>nRT</i> ln(<i>V</i><sub>2</sub>/<i>V</i><sub>1</sub>)",
-        "opt_right": "<i>w</i> = -<i>P</i>Δ<i>V</i>",
-        "opt_left": "<i>w</i> = Δ<i>U</i>",
-        "correct": "UP",
-        "expl_up": "Recall the integral of P dV when external and internal pressures are balanced."
-    }
-    /* PASTE REMAINING 101 QUESTIONS BELOW THIS LINE */
-    /* ENSURE NO STRAY TEXT LIKE "SAMPLE ITEMS" AT THE END */
-];
-
-// 3. CORE ENGINE LOGIC
 let currentIndex = 0;
-const dock = document.getElementById('card-dock');
 
 function renderCard(index) {
+    const dock = document.getElementById('card-dock');
     if (!dock) return;
+
+    // Fix for the 'undefined' error
+    if (typeof MASTER_POOL === 'undefined') {
+        dock.innerHTML = `
+            <div style="padding:40px; color:#ff4b2b; text-align:center; font-family:sans-serif;">
+                <h2 style="letter-spacing:1px;">DATA LINK FAILURE</h2>
+                <p>MASTER_POOL is undefined.<br>Ensure data.js is loaded BEFORE script.js.</p>
+            </div>`;
+        return;
+    }
+
     if (index >= MASTER_POOL.length) {
         dock.innerHTML = "<div class='card'><div class='content'>Mastery Complete.</div></div>";
         return;
@@ -35,24 +31,25 @@ function renderCard(index) {
     const card = document.createElement('div');
     card.className = 'card' + (data.rank === 'A' ? ' rank-a-pulse' : '');
     
-    // UI Construction using your data keys: 'question' and 'id'
-    let html = '<div class="content">' + data.question + '</div>';
-    html += '<div class="meta">RANK ' + data.rank + ' | ID: ' + data.id + '</div>';
-    card.innerHTML = html;
+    // Mapping keys from your dataset
+    card.innerHTML = '<div class="content">' + data.question + '</div>' +
+                     '<div class="meta"><span>ID: ' + data.id + '</span><span>RANK ' + data.rank + '</span></div>';
 
+    setupSwipe(card, data.rank);
+    dock.appendChild(card);
+}
+
+function setupSwipe(card, rank) {
     let startX = 0, dist = 0;
-    const threshold = (data.rank === 'A') ? 160 : 110;
+    const threshold = (rank === 'A') ? 160 : 110;
 
-    card.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].pageX;
-    }, {passive: true});
-
-    card.addEventListener('touchmove', function(e) {
+    card.addEventListener('touchstart', e => { startX = e.touches[0].pageX; }, {passive: true});
+    card.addEventListener('touchmove', e => {
         dist = e.touches[0].pageX - startX;
         card.style.transform = 'translateX(' + dist + 'px) rotate(' + (dist/15) + 'deg)';
     }, {passive: true});
 
-    card.addEventListener('touchend', function() {
+    card.addEventListener('touchend', () => {
         if (Math.abs(dist) > threshold) {
             card.style.transition = '0.3s';
             card.style.transform = 'translateX(' + (dist > 0 ? 1000 : -1000) + 'px)';
@@ -61,24 +58,13 @@ function renderCard(index) {
             card.style.transform = 'translateX(0) rotate(0)';
         }
     });
-
-    dock.appendChild(card);
 }
 
 function nextCard() {
     currentIndex++;
-    dock.innerHTML = '';
+    document.getElementById('card-dock').innerHTML = '';
     renderCard(currentIndex);
-    const masteryEl = document.getElementById('mastery');
-    if(masteryEl) masteryEl.innerText = 'MASTERY: ' + Math.round((currentIndex/MASTER_POOL.length)*100) + '%';
+    document.getElementById('mastery').innerText = 'MASTERY: ' + Math.round((currentIndex/MASTER_POOL.length)*100) + '%';
 }
 
-// 4. BOOT SEQUENCE
-window.onload = function() {
-    if (typeof MASTER_POOL !== 'undefined' && MASTER_POOL.length > 0) {
-        renderCard(0);
-    } else {
-        alert("CRITICAL: Data Pool is empty or undefined.");
-    }
-};
-</script>
+window.onload = () => { renderCard(0); };
