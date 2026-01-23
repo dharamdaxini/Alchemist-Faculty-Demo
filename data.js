@@ -1,6 +1,7 @@
 /* data.js */
 
-const MASTER_SET = [
+const MASTER_POOL = [
+
   {
     "id": "MSTR_001",
     "rank": "E",
