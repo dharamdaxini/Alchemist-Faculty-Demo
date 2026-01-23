@@ -1,276 +1,81 @@
+/* ALCHEMIST V170: CORE STYLES */
 :root { 
-    /* Core Palette: Deep Space Noir */
-    --bg: #05080f; 
-    --card-bg: #0b172a; 
-    --dock-bg: #0f203a; 
-    --border: #1e2f4a; 
-    --accent: #38bdf8; 
-    --text-main: #f0f4f8; 
-    --text-sub: #64748b; 
-    --gold: #fbbf24; 
-    --rank-a: #8b5cf6; /* Expert Purple */
-    --success: #10b981;
-    
-    /* Typography Stacks */
-    --font-ui: 'Inter', sans-serif; 
-    --font-book: 'Crimson Pro', serif;       
-    --font-code: 'JetBrains Mono', monospace;
+    --bg: #05070a; 
+    --card: #12151c; 
+    --accent: #4a90e2; 
+    --rankA: #ff4b2b; 
+    --text-dim: #888;
 }
 
-/* Global Reset & Performance */
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
 body { 
-    margin: 0; 
-    height: 100vh; 
     background: var(--bg); 
-    color: var(--text-main); 
-    font-family: var(--font-ui); 
+    color: white; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; 
+    margin: 0; 
     overflow: hidden; 
-    display: flex; 
-    flex-direction: column; 
-    touch-action: none; /* Prevents browser pull-to-refresh during card drag */
+    height: 100vh;
 }
 
-/* Main Interaction Stage */
-#stage { flex-grow: 1; position: relative; overflow: hidden; perspective: 1200px; }
-
-/* The V170 Card Component */
-.card { 
-    position: absolute; 
-    width: 360px; 
-    left: 50%; 
-    margin-left: -180px; 
-    bottom: 220px; 
-    top: 70px; 
-    background: var(--card-bg); 
-    border-radius: 24px 24px 0 0; 
-    border: 1px solid var(--border); 
-    border-bottom: none;
+#header { 
+    padding: 20px; 
     display: flex; 
-    flex-direction: column; 
-    box-shadow: 0 -20px 50px rgba(0,0,0,0.6); 
-    transform-origin: center bottom; 
-    will-change: transform, opacity; 
-    overflow: hidden; 
-    z-index: 5;
-}
-
-/* Rank Metadata Tagging */
-.rank-tag { 
-    position: absolute; 
-    top: 20px; 
-    left: 24px; 
-    font-size: 0.7rem; 
-    font-weight: 900; 
-    letter-spacing: 1.5px; 
-    color: var(--gold); 
-    border: 1.5px solid var(--gold); 
-    padding: 3px 10px; 
-    border-radius: 6px; 
-    z-index: 10;
+    justify-content: space-between; 
+    border-bottom: 1px solid #222; 
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    font-weight: 700; 
     text-transform: uppercase;
 }
 
-/* Rank A Specific: The Expert Pulse */
-.rank-a-glow { 
-    border-color: var(--rank-a); 
-    color: var(--rank-a); 
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-    animation: expertPulse 2s infinite ease-in-out;
-}
-
-@keyframes expertPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; box-shadow: 0 0 30px rgba(139, 92, 246, 0.6); }
-}
-
-/* Card Content Area */
-.card-top { 
-    flex-grow: 1; 
-    padding: 60px 30px 30px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
+#card-dock { 
     position: relative; 
+    height: 65vh; 
+    width: 90%; 
+    margin: 5vh auto; 
 }
 
-.goal-header { 
+.card { 
     position: absolute; 
-    top: 65px; 
-    font-size: 0.75rem; 
-    font-weight: 800; 
-    color: var(--text-sub); 
-    text-transform: uppercase; 
-    letter-spacing: 2px; 
-}
-
-.card-q { 
-    font-family: var(--font-book); 
-    font-size: 1.7rem; 
-    font-weight: 600; 
-    line-height: 1.35; 
-    color: #fff; 
-    text-wrap: balance;
-}
-
-.card-overlay-text { 
-    position: absolute; 
-    top: 55%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    font-family: var(--font-book); 
-    font-size: 1.35rem; 
-    font-weight: 500; 
-    color: #fff; 
-    opacity: 0; 
-    pointer-events: none; 
-    width: 85%; 
-    text-align: center; 
-    line-height: 1.5;
-    text-shadow: 0 4px 20px rgba(0,0,0,1); 
-}
-
-/* The Heuristic Dock */
-.card-dock { 
-    position: absolute; 
-    bottom: 0; 
-    left: 0; 
     width: 100%; 
-    height: 220px; 
-    background: var(--dock-bg); 
-    border-top: 2px solid var(--gold); 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    padding: 5px 0; 
-    z-index: 10; 
-}
-
-.dock-col { 
-    display: flex; 
-    flex-direction: row; 
-    align-items: center; 
-    justify-content: space-between; 
-    flex: 1; 
-    padding: 0 24px; 
-    border-bottom: 1px solid var(--border); 
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-}
-
-.dock-label { 
-    font-size: 0.65rem; 
-    font-weight: 900; 
-    color: var(--text-sub); 
-    width: 70px; 
-    flex-shrink: 0; 
-    letter-spacing: 1px;
-}
-
-.dock-val { 
-    font-family: var(--font-book); 
-    font-size: 1.1rem; 
-    color: var(--text-main); 
-    font-weight: 500; 
-    text-align: right; 
-    flex: 1; 
-    opacity: 0.85;
-}
-
-.dock-col.active { background: rgba(56, 189, 248, 0.15); border-left: 4px solid var(--accent); }
-.dock-col.active .dock-val { color: var(--accent); opacity: 1; transform: translateX(-5px); }
-
-/* Header & Stat Display */
-#header { 
-    width: 100%; 
-    height: 70px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0 24px; 
-    background: var(--bg);
-}
-
-.stat-pill { 
-    background: #000; 
-    padding: 8px 16px; 
-    border-radius: 8px; 
-    font-size: 0.75rem; 
-    border: 1px solid var(--border); 
-    font-family: var(--font-code); 
-    color: var(--accent); 
-    letter-spacing: 1px;
-}
-
-.progress-line { 
-    position: fixed; 
-    bottom: 0; 
-    left: 0; 
-    height: 4px; 
-    background: linear-gradient(90deg, var(--accent), var(--rank-a)); 
-    width: 0%; 
-    transition: width 0.5s ease; 
-    z-index: 100; 
-}
-
-/* Master Analysis Modal */
-#analysis-modal { 
-    position: fixed; 
-    inset: 0; 
-    background: #05080f; 
-    z-index: 5000; 
-    display: none; 
-    flex-direction: column; 
-    padding: 50px 30px 30px; 
-}
-
-#analysis-modal.open { display: flex; animation: modalFade 0.3s ease-out; }
-
-@keyframes modalFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-.analysis-block { 
-    background: #0b172a; 
-    padding: 30px; 
-    border-radius: 16px; 
-    border-left: 5px solid var(--gold); 
-    text-align: left; 
-    font-family: var(--font-book); 
-    line-height: 1.7; 
-    color: #e2e8f0; 
-    font-size: 1.25rem; 
-    margin-bottom: 30px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-/* Bold Anchor Highlighting */
-.analysis-block b { color: var(--gold); font-weight: 700; text-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
-
-.next-step-item { 
-    background: rgba(56, 189, 248, 0.08); 
-    border: 1px solid var(--border); 
-    padding: 18px; 
+    height: 100%; 
+    background: var(--card); 
     border-radius: 12px; 
-    font-size: 0.95rem; 
-    margin-bottom: 15px; 
-    color: var(--accent); 
-    font-family: var(--font-ui); 
-    display: flex;
-    align-items: center;
+    border: 1px solid #333; 
+    display: flex; 
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+    touch-action: none; 
+    transition: transform 0.1s ease-out;
+    user-select: none;
 }
 
-.next-step-item::before { content: "🔬"; margin-right: 12px; filter: grayscale(1); }
+/* Rank A Pulse: Physically reinforces psychological commitment */
+.rank-a-pulse { 
+    animation: pulse 1.5s infinite; 
+    border-color: var(--rankA) !important; 
+}
 
-.modal-btn { 
-    background: #fff; 
-    color: #000; 
-    border: none; 
-    padding: 22px; 
-    border-radius: 14px; 
-    font-weight: 900; 
-    cursor: pointer; 
-    text-transform: uppercase; 
-    letter-spacing: 2px; 
-    font-size: 1rem;
-    box-shadow: 0 4px 20px rgba(255,255,255,0.2);
+@keyframes pulse { 
+    0% { box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.4); } 
+    70% { box-shadow: 0 0 0 15px rgba(255, 75, 43, 0); } 
+    100% { box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); } 
+}
+
+.content { 
+    padding: 30px; 
+    flex-grow: 1; 
+    font-size: 19px; 
+    line-height: 1.5; 
+    overflow-y: auto;
+}
+
+.meta { 
+    padding: 15px; 
+    background: rgba(0,0,0,0.3); 
+    font-size: 11px; 
+    color: var(--text-dim); 
+    border-bottom-left-radius: 12px; 
+    border-bottom-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
 }
