@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ALCHEMIST | SAFETY CIRCLE V155</title>
+    <title>ALCHEMIST | V157 FINAL LOCK</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,27 +43,52 @@
         .stat-pill { background: rgba(11, 23, 42, 0.8); padding: 8px 16px; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--border); font-weight: 700; letter-spacing: 1px; font-family: var(--font-code); }
 
         /* STAGE */
-        #stage { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: visible; position: relative; perspective: 1000px; }
+        #stage { 
+            flex-grow: 1; 
+            position: relative; 
+            overflow: hidden; 
+            perspective: 1000px; 
+        }
 
-        /* CARD */
+        /* CARD (ANCHORED) */
         .card { 
-            position: absolute; width: 92%; max-width: 380px; height: 75vh; max-height: 650px;
-            background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); 
+            position: absolute; 
+            left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 380px; 
+            
+            /* ANCHOR TO DOCK */
+            bottom: 220px; 
+            top: 70px;
+            
+            background: var(--card-bg); 
+            border-radius: 20px 20px 0 0; 
+            border: 1px solid var(--border); border-bottom: none;
+            
             display: flex; flex-direction: column; 
-            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6); 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5); 
+            
+            /* PIVOT: BOTTOM CENTER */
             transform-origin: 50% 100%; 
             will-change: transform; overflow: hidden;
         }
 
         .card-top { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .card-q { font-family: var(--font-book); font-size: clamp(1.6rem, 5vmin, 2.2rem); font-weight: 600; line-height: 1.3; color: #fff; transition: opacity 0.05s linear; }
-        .card-overlay-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-book); font-size: 2rem; font-weight: 600; color: #fff; opacity: 0; pointer-events: none; width: 90%; text-align: center; text-shadow: 0 10px 30px rgba(0,0,0,0.9); transition: opacity 0.05s linear; }
+        
+        .card-overlay-text { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            font-family: var(--font-book); font-size: 2rem; font-weight: 600; color: #fff; 
+            opacity: 0; pointer-events: none; width: 90%; text-align: center; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.9); transition: opacity 0.05s linear; 
+        }
 
-        /* DOCK */
+        /* DOCK (ANCHOR BASE) */
         .card-dock { 
-            min-height: 220px; background: var(--dock-bg); 
-            border-top: 2px solid var(--gold); /* The Yellow Line */
-            display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; padding: 10px 0; transition: background 0.2s;
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            height: 220px; background: var(--dock-bg); 
+            border-top: 2px solid var(--gold); /* YELLOW LINE */
+            display: flex; flex-direction: column; justify-content: center; 
+            padding: 10px 0; transition: background 0.2s; z-index: 10;
         }
         .card-dock.analysis-mode { background: rgba(251, 191, 36, 0.1); }
 
@@ -78,20 +103,20 @@
         .dock-col.active { background: rgba(56, 189, 248, 0.1); }
         .dock-col.active .dock-val { color: var(--accent); opacity: 1; }
 
-        .card-dummy { position: absolute; width: 85%; height: 60vh; background: #08101e; border-radius: 20px; z-index: -1; opacity: 0.5; bottom: 15%; }
+        .card-dummy { position: absolute; width: 85%; height: 60vh; background: #08101e; border-radius: 20px; z-index: -1; opacity: 0.5; bottom: 230px; left: 50%; transform: translateX(-50%); }
 
         /* MODAL */
         #analysis-modal { position: fixed; inset: 0; background: rgba(5,8,15,0.98); z-index: 5000; display: none; flex-direction: column; padding: 30px; opacity: 0; transition: opacity 0.25s ease; }
         #analysis-modal.open { display: flex; opacity: 1; }
         .modal-content { flex: 1; display: flex; flex-direction: column; justify-content: center; color: #cbd5e1; line-height: 1.8; font-size: 1.2rem; font-family: var(--font-book); }
         .modal-btn { background: var(--accent); color: #050505; border: none; padding: 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-top: 20px; text-transform: uppercase; letter-spacing: 1.5px; font-family: var(--font-ui); }
-        .progress-line { position: fixed; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.4s; }
+        .progress-line { position: fixed; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.4s; z-index: 100; }
     </style>
 </head>
 <body>
 
     <div id="portal">
-        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">Safety Circle V155</div></div>
+        <div class="portal-header"><div class="app-title">Alchemist</div><div class="section-label">V157 Stable</div></div>
         <div id="library"></div>
         <div style="margin-top:auto;">
             <div class="section-label">System Tools</div>
@@ -108,7 +133,12 @@
         </div>
         <div id="stage">
             <div class="card-dummy"></div>
+            <div class="card-dock" id="card-dock">
+                <div class="dock-col" id="col-left"><div class="dock-label">← LEFT</div><div class="dock-val">...</div></div>
+                <div class="dock-col" id="col-up"><div class="dock-label">↑ UP</div><div class="dock-val">...</div></div>
+                <div class="dock-col" id="col-right"><div class="dock-label">RIGHT →</div><div class="dock-val">...</div></div>
             </div>
+        </div>
         <div class="progress-line" id="progress"></div>
     </div>
 
@@ -121,9 +151,8 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyUrjUy8jL3jrJ8k3yIjEdFbFHtoyfbR7PRXAjnUzbopTOELvGT-MQXw7pApmOeahuyoA/exec";
     const SESSION_ID = "SESS_" + Date.now().toString().slice(-5);
     let db, INDEX = 0, SCORE = 0, POOL = [];
-    const DB_NAME = "AlchemistDB_V155", STORE_NAME = "Vaults";
+    const DB_NAME = "AlchemistDB_V157", STORE_NAME = "Vaults";
 
-    // --- FULL 30 QUESTION STRESS TEST DATA ---
     const DEMO_DATA = [
         {id:"FAC_01", dom:"THERMO", q:"Relationship between Kp and Kc for: N2 + 3H2 <=> 2NH3?", u:"Kp = Kc(RT)", l:"Kp = Kc(RT)^2", r:"Kp = Kc(RT)^-2", ans:"RIGHT", expl:"Delta n = 2-4 = -2. Thus Kp = Kc(RT)^-2."},
         {id:"FAC_02", dom:"KINETIC", q:"If Ea = 50 kJ/mol, by what factor does rate increase from 300K to 310K?", u:"~1.5x", l:"~3.0x", r:"~2.0x", ans:"RIGHT", expl:"Using Arrhenius eq, ln(k2/k1) ≈ 0.693, meaning the rate doubles."},
@@ -228,45 +257,40 @@
         card.className = "card";
         card.id = "active-card";
         
+        // We set translateX here via style to center, but CSS handles layout
+        card.style.transform = `translateX(-50%)`;
+
         card.innerHTML = `
             <div class="card-top">
                 <div class="card-q" id="q-text">${formatText(q.q)}</div>
                 <div class="card-overlay-text" id="ov-text"></div>
             </div>
-            
-            <div class="card-dock" id="card-dock">
-                <div class="dock-col" id="col-left">
-                    <div class="dock-label">← LEFT</div>
-                    <div class="dock-val">${formatText(q.l_txt)}</div>
-                </div>
-                <div class="dock-col" id="col-up">
-                    <div class="dock-label">↑ UP</div>
-                    <div class="dock-val">${formatText(q.u_txt)}</div>
-                </div>
-                <div class="dock-col" id="col-right">
-                    <div class="dock-label">RIGHT →</div>
-                    <div class="dock-val">${formatText(q.r_txt)}</div>
-                </div>
-            </div>
         `;
+        
         document.getElementById('stage').appendChild(card);
+        
+        // Update DOCK Content
+        document.querySelector('#col-left .dock-val').innerHTML = formatText(q.l_txt);
+        document.querySelector('#col-up .dock-val').innerHTML = formatText(q.u_txt);
+        document.querySelector('#col-right .dock-val').innerHTML = formatText(q.r_txt);
+        
         bindPhysics(card, q);
     }
 
-    // --- PHYSICS: SAFETY CIRCLE (0.5cm) ---
+    // --- PHYSICS ENGINE: V157 STABLE ---
     function bindPhysics(el, data) {
         let startX, startY, isDragging = false;
         
-        // Pivot: Top of Dock
+        // PIVOT: Exact Center of the Yellow Line
         const pivotY = window.innerHeight - 220; 
         const pivotX = window.innerWidth / 2;
 
         const qText = el.querySelector('#q-text');
         const ovText = el.querySelector('#ov-text');
         const dock = el.querySelector('#card-dock');
-        const colLeft = el.querySelector('#col-left');
-        const colRight = el.querySelector('#col-right');
-        const colUp = el.querySelector('#col-up');
+        const colLeft = document.querySelector('#col-left');
+        const colRight = document.querySelector('#col-right');
+        const colUp = document.querySelector('#col-up');
 
         el.addEventListener('touchstart', e => { isDragging=true; startX=e.touches[0].clientX; startY=e.touches[0].clientY; el.style.transition='none'; });
         
@@ -278,9 +302,9 @@
             // 1. DEAD ZONE (Below Pivot)
             if (cy > pivotY) {
                 const dx = cx - startX; const dy = cy - startY;
-                el.style.transform = `translate(${dx*0.1}px, ${dy*0.3}px)`;
+                // Move card slightly (feedback only)
+                el.style.transform = `translateX(calc(-50% + ${dx*0.1}px)) translateY(${dy*0.3}px)`;
                 
-                // Clear UI
                 qText.style.opacity = 1; ovText.style.opacity = 0;
                 [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
                 
@@ -303,6 +327,7 @@
             const dy = cy - pivotY; 
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
             
+            // 5 DEGREE CLAMP
             let rot = angleDeg;
             if (rot > 5) rot = 5; if (rot < -5) rot = -5;
 
@@ -311,30 +336,30 @@
             const moveX = dragX * 0.12; 
             const moveY = dragY * 0.12;
 
-            el.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
+            // Apply Rotation around anchored bottom
+            el.style.transform = `translateX(calc(-50% + ${moveX}px)) translateY(${moveY}px) rotate(${rot}deg)`;
             
-            // 3. SAFETY CIRCLE CHECK (Noise Filter)
+            // 3. SAFETY CIRCLE CHECK (Noise Filter - 40px)
             const dist = Math.sqrt(dragX*dragX + dragY*dragY);
-            const NOISE_RADIUS = 40; // 0.5cm approx
+            const NOISE_RADIUS = 40;
 
             if (dist < NOISE_RADIUS) {
-                // Inside safety circle: Card moves, but UI frozen
                 qText.style.opacity = 1; 
                 ovText.style.opacity = 0;
                 [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
                 return; 
             }
 
-            // 4. ACTIVE ZONE (Passed Safety Circle)
-            // Use (dist - NOISE_RADIUS) so fade starts smoothly AFTER the circle
+            // 4. CROSS-FADE & HIGHLIGHT
             const activeDist = dist - NOISE_RADIUS;
-            const progress = Math.min(activeDist / 120, 1);
+            const progress = Math.min(activeDist / 120, 1); // 120px active drag
             
             qText.style.opacity = 1 - progress; 
             ovText.style.opacity = progress;
             
             [colLeft, colRight, colUp].forEach(c => c.classList.remove('active'));
 
+            // CONE LOGIC (Strict)
             if (dragY < -40 && Math.abs(angleDeg) < 10) {
                 ovText.innerHTML = formatText(data.u_txt); 
                 if(progress > 0.1) colUp.classList.add('active');
@@ -351,7 +376,6 @@
             if (!isDragging) return; isDragging=false;
             const y = e.changedTouches[0].clientY;
             
-            // DEAD ZONE RELEASE
             if (y > pivotY) { 
                 const dy = e.changedTouches[0].clientY - startY;
                 if (dy > 100) finishSwipe(el, data, "DOWN"); 
@@ -367,7 +391,7 @@
             const dy = e.changedTouches[0].clientY - pivotY;
             let angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-            // COMMIT THRESHOLD (Must drag > 150px total)
+            // COMMIT (Need > 150px total drag for safety)
             if (dist > 150) {
                 if (dragY < -60 && Math.abs(angleDeg) < 15) finishSwipe(el, data, "UP");
                 else if (x > 60) finishSwipe(el, data, "RIGHT");
@@ -381,17 +405,17 @@
 
     function resetCard(el) { 
         el.style.transition='transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1)'; 
-        el.style.transform='translate(0,0) rotate(0deg)'; 
+        el.style.transform='translateX(-50%) rotate(0deg)'; 
         el.querySelector('#q-text').style.opacity = 1;
         el.querySelector('#ov-text').style.opacity = 0;
-        el.querySelector('#card-dock').classList.remove('analysis-mode');
-        el.querySelectorAll('.dock-col').forEach(c => c.classList.remove('active'));
+        document.querySelector('#card-dock').classList.remove('analysis-mode');
+        document.querySelectorAll('.dock-col').forEach(c => c.classList.remove('active'));
     }
 
     function finishSwipe(el, data, dir) {
         if(dir === "DOWN") {
             el.style.transition='transform 0.4s ease-in';
-            el.style.transform=`translate(0px, 100vh)`;
+            el.style.transform=`translateX(-50%) translateY(100vh)`;
             setTimeout(()=>{showAnalysis(data.expl); el.remove(); INDEX++; renderCard();}, 300);
             logData(data.id, "ANALYSIS", "VIEW", "");
             return;
@@ -402,7 +426,8 @@
         let rot = dir === "RIGHT" ? 5 : (dir === "LEFT" ? -5 : 0);
         
         el.style.transition='transform 0.25s ease-out'; 
-        el.style.transform=`translate(${tx}px, ${ty}px) rotate(${rot}deg)`;
+        // Need to keep translateX(-50%)
+        el.style.transform=`translateX(-50%) translate(${tx}px, ${ty}px) rotate(${rot}deg)`;
 
         const corr = (dir===data.actualAns); SCORE += corr?1:0; 
         logData(data.id, dir, corr?"CORRECT":"WRONG", "");
