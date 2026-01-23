@@ -1,10 +1,5 @@
 /* script.js */
-
-// 1. PANIC DEBUGGER
-window.onerror = function(m, u, l) {
-    alert("FATAL ERROR: " + m + "\nLine: " + l);
-    return false;
-};
+window.onerror = function(m, u, l) { alert("Engine Halt: " + m + " at line " + l); return false; };
 
 let currentIndex = 0;
 
@@ -12,13 +7,9 @@ function renderCard(index) {
     const dock = document.getElementById('card-dock');
     if (!dock) return;
 
-    // Fix for the 'undefined' error
+    // Fix for the 'undefined' error caught in your console
     if (typeof MASTER_POOL === 'undefined') {
-        dock.innerHTML = `
-            <div style="padding:40px; color:#ff4b2b; text-align:center; font-family:sans-serif;">
-                <h2 style="letter-spacing:1px;">DATA LINK FAILURE</h2>
-                <p>MASTER_POOL is undefined.<br>Ensure data.js is loaded BEFORE script.js.</p>
-            </div>`;
+        dock.innerHTML = "<div style='color:#ff4b2b; padding:40px; text-align:center;'>DATA LINK FAILURE: MASTER_POOL is undefined.</div>";
         return;
     }
 
@@ -31,7 +22,7 @@ function renderCard(index) {
     const card = document.createElement('div');
     card.className = 'card' + (data.rank === 'A' ? ' rank-a-pulse' : '');
     
-    // Mapping keys from your dataset
+    // Mapping keys exactly as they appear in your data.js
     card.innerHTML = '<div class="content">' + data.question + '</div>' +
                      '<div class="meta"><span>ID: ' + data.id + '</span><span>RANK ' + data.rank + '</span></div>';
 
@@ -62,9 +53,11 @@ function setupSwipe(card, rank) {
 
 function nextCard() {
     currentIndex++;
-    document.getElementById('card-dock').innerHTML = '';
+    const dock = document.getElementById('card-dock');
+    if (dock) dock.innerHTML = '';
     renderCard(currentIndex);
-    document.getElementById('mastery').innerText = 'MASTERY: ' + Math.round((currentIndex/MASTER_POOL.length)*100) + '%';
+    const mastery = document.getElementById('mastery');
+    if (mastery) mastery.innerText = 'MASTERY: ' + Math.round((currentIndex / MASTER_POOL.length) * 100) + '%';
 }
 
 window.onload = () => { renderCard(0); };
