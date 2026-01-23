@@ -1,3 +1,5 @@
+/* data.js */
+
 const MASTER_SET = [
   {
     "id": "MSTR_001",
