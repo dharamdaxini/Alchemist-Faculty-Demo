@@ -91,7 +91,23 @@
 /**
  * CANONICAL V170_MASTER_SET INTEGRATED
  */
-const V170MASTER_SET = [
+let POOL = [];
+
+// NEW: Integrated Faculty Data Stream
+async function fetchCurriculum() {
+    try {
+        const response = await fetch('http://localhost:3000/api/curriculum');
+        POOL = await response.json();
+        console.log("Faculty Data Injected Successfully.");
+        renderCard(); // Start the engine once data arrives
+    } catch (err) {
+        console.error("Connection to Faculty Server failed:", err);
+        // Fallback or Alert
+    }
+}
+
+fetchCurriculum();
+ = [
 
   {
     "id": "MSTR_077", "rank": "A", "domain": "ORGANIC", "goal": "Curtin-Hammett Principle",
