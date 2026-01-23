@@ -6,8 +6,7 @@
     <title>Alchemist V170</title>
     
     <script>
-        const v = Date.now();
-        document.write('<link rel="stylesheet" href="style.css?v=' + v + '">');
+        document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
     </script>
 </head>
 <body>
@@ -20,20 +19,20 @@
     <div id="card-dock"></div>
 
     <script>
-        const timestamp = Date.now();
+        const ts = Date.now();
         
-        function injectScript(src, callback) {
+        function loadAsset(src, callback) {
             const s = document.createElement('script');
-            s.src = src + "?v=" + timestamp;
+            s.src = src + "?v=" + ts;
             s.onload = callback;
             s.onerror = () => alert("Failed to load: " + src);
             document.body.appendChild(s);
         }
 
-        // Mandatory Sequence: Load Data -> then Logic
-        injectScript('data.js', function() {
-            injectScript('script.js', function() {
-                console.log("Alchemist V170 Online.");
+        // Mandatory Sequence: Data must exist before Logic runs
+        loadAsset('data.js', function() {
+            loadAsset('script.js', function() {
+                console.log("UI Version 167 Restored. Engine Online.");
             });
         });
     </script>
