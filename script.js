@@ -1,28 +1,32 @@
-/* script.js */
-window.onerror = function(m, u, l) { alert("Engine Halt: " + m + " at line " + l); return false; };
+/* script.js - V170 ASYNC SAFE ENGINE */
+window.onerror = function(m, u, l) { console.error("Halt: " + m); return false; };
 
 let currentIndex = 0;
 
+// THE WAITER: This solves the time gap between data and script updates
+function bootEngine() {
+    const dock = document.getElementById('card-dock');
+    
+    // Check if data.js has finished loading/propagating
+    if (typeof MASTER_POOL === 'undefined') {
+        if (dock) dock.innerHTML = "<div style='color:#4a90e2; padding:40px;'>Syncing Master Data...</div>";
+        setTimeout(bootEngine, 200); // Try again in 200ms
+        return;
+    }
+
+    console.log("Data Link Established. Initializing V170.");
+    renderCard(0);
+}
+
 function renderCard(index) {
     const dock = document.getElementById('card-dock');
-    if (!dock) return;
-
-    // Fix for the 'undefined' error caught in your console
-    if (typeof MASTER_POOL === 'undefined') {
-        dock.innerHTML = "<div style='color:#ff4b2b; padding:40px; text-align:center;'>DATA LINK FAILURE: MASTER_POOL is undefined.</div>";
-        return;
-    }
-
-    if (index >= MASTER_POOL.length) {
-        dock.innerHTML = "<div class='card'><div class='content'>Mastery Complete.</div></div>";
-        return;
-    }
+    if (!dock || index >= MASTER_POOL.length) return;
 
     const data = MASTER_POOL[index];
     const card = document.createElement('div');
     card.className = 'card' + (data.rank === 'A' ? ' rank-a-pulse' : '');
     
-    // Mapping keys exactly as they appear in your data.js
+    // Using 'question' key from your data.js
     card.innerHTML = '<div class="content">' + data.question + '</div>' +
                      '<div class="meta"><span>ID: ' + data.id + '</span><span>RANK ' + data.rank + '</span></div>';
 
@@ -60,4 +64,5 @@ function nextCard() {
     if (mastery) mastery.innerText = 'MASTERY: ' + Math.round((currentIndex / MASTER_POOL.length) * 100) + '%';
 }
 
-window.onload = () => { renderCard(0); };
+// Start the check loop on load
+window.onload = bootEngine;
