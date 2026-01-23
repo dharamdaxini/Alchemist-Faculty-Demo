@@ -6,7 +6,8 @@
     <title>Alchemist V170</title>
     
     <script>
-        document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
+        const v = Date.now();
+        document.write('<link rel="stylesheet" href="style.css?v=' + v + '">');
     </script>
 </head>
 <body>
@@ -21,18 +22,18 @@
     <script>
         const timestamp = Date.now();
         
-        function loadScript(src, callback) {
-            const script = document.createElement('script');
-            script.src = src + "?v=" + timestamp;
-            script.onload = callback;
-            document.body.appendChild(script);
+        function injectScript(src, callback) {
+            const s = document.createElement('script');
+            s.src = src + "?v=" + timestamp;
+            s.onload = callback;
+            s.onerror = () => alert("Failed to load: " + src);
+            document.body.appendChild(s);
         }
 
-        // Mandatory Load Sequence: Data -> Logic
-        loadScript('data.js', function() {
-            console.log("Master Data Pool Synchronized.");
-            loadScript('script.js', function() {
-                console.log("Logic Engine Initialized.");
+        // Mandatory Sequence: Load Data -> then Logic
+        injectScript('data.js', function() {
+            injectScript('script.js', function() {
+                console.log("Alchemist V170 Online.");
             });
         });
     </script>
