@@ -1,17 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="style.css">
+    <title>Alchemist V170</title>
+    
+    <script>
+        document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
+    </script>
 </head>
 <body>
+
     <div id="header">
         <span>ALCHEMIST V170</span>
         <span id="mastery">MASTERY: 0%</span>
     </div>
+
     <div id="card-dock"></div>
 
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+    <script>
+        const timestamp = Date.now();
+        
+        function loadScript(src, callback) {
+            const script = document.createElement('script');
+            script.src = src + "?v=" + timestamp;
+            script.onload = callback;
+            document.body.appendChild(script);
+        }
+
+        // Mandatory Load Sequence: Data -> Logic
+        loadScript('data.js', function() {
+            console.log("Master Data Pool Synchronized.");
+            loadScript('script.js', function() {
+                console.log("Logic Engine Initialized.");
+            });
+        });
+    </script>
+
 </body>
 </html>
