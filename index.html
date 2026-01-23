@@ -90,33 +90,36 @@
 <script>
 /**
  * CANONICAL V170_MASTER_SET
- * Logic: Merged Stream (FAC-series + MSTR-series)
+ * Logic: Merged Stream (102 Questions)
  */
 const POOL = [
   {
-    "id": "FAC_01", "rank": "A", "domain": "THERMO", "goal": "Equilibrium Constant",
-    "question": "What is the relationship between $K_p$ and $K_c$ for $N_2 + 3H_2 \\rightleftharpoons 2NH_3$?",
-    "opt_up": "$K_p = K_c(RT)^{-2}$", "opt_right": "$K_p = K_c(RT)^{2}$", "opt_left": "$K_p = K_c(RT)$",
-    "correct": "UP", "expl_up": "Correct. $\\Delta n = 2 - 4 = -2$.", "expl_right": "Incorrect. This assumes a positive change in gas moles.", "expl_left": "Incorrect. This neglects the exponent related to stoichiometry.",
-    "analysis": "<b>Physical Principle:</b> The relationship between $K_p$ and $K_c$ is defined as $K_p = K_c(RT)^{\\Delta n}$. In the Haber process, $\\Delta n_{gas} = 2 - (1 + 3) = -2$.",
-    "next_steps": "1. Derive the thermodynamic relation between $K_p$ and $\\Delta G^{\\circ}$. 2. Analyze pressure effects via Le Châtelier's principle."
+    "id": "MSTR_001", "rank": "E", "domain": "PHYSICAL", "goal": "Thermodynamics",
+    "question": "In a reversible isothermal expansion of an ideal gas, what is the work formula?",
+    "opt_up": "<i>w</i> = −<i>nRT</i> ln(<i>V</i><sub>2</sub>/<i>V</i><sub>1</sub>)", "opt_right": "<i>w</i> = −<i>P</i>Δ<i>V</i>", "opt_left": "<i>w</i> = Δ<i>U</i>",
+    "correct": "UP", "expl_up": "CORRECT. Integrates P_int across the volume change.", 
+    "expl_right": "This applies to irreversible constant pressure paths.", "expl_left": "ΔU is zero for isothermal ideal gas expansion.",
+    "analysis": "<b>Physical Principle:</b> For a reversible process, P<sub>ext</sub> = P<sub>int</sub>. Integrating <i>dw</i> = −<i>P</i>d<i>V</i> with <i>P</i> = <i>nRT</i>/<i>V</i> yields the logarithmic work expression.",
+    "next_steps": "1. Graph work areas. 2. Derive adiabatic work."
   },
   {
     "id": "MSTR_077", "rank": "A", "domain": "ORGANIC", "goal": "Curtin-Hammett Principle",
-    "question": "In interconverting conformers A $\\rightleftharpoons$ B, what determines the product ratio $P_A : P_B$?",
+    "question": "In fast-equilibrating conformers A ⇌ B, what determines the product ratio P<sub>A</sub> : P<sub>B</sub>?",
     "opt_up": "Relative energies of transition states", "opt_right": "Relative populations of conformers", "opt_left": "Speed of interconversion alone",
-    "correct": "UP", "expl_up": "CORRECT. Selectivity is a function of the free energy difference between transition states.",
-    "expl_right": "TRAP. Ground-state stability does not dictate product outcome in fast-equilibrating systems.", "expl_left": "INCOMPLETE. Absolute rates matter, but the ratio depends on barrier heights.",
-    "analysis": "<b>Physical Principle:</b> The <b>Curtin-Hammett Principle</b> states that product distribution depends solely on the relative energies of the transition states ($\Delta\Delta G^{\ddagger}$), regardless of ground-state equilibrium concentrations.",
+    "correct": "UP", "expl_up": "CORRECT. Selectivity is a function of ΔΔG<sup>‡</sup>.",
+    "expl_right": "TRAP. Ground-state stability does not dictate product outcome in fast-equilibrating systems.",
+    "expl_left": "INCOMPLETE. Interconversion must be fast, but TS energies determine the actual ratio.",
+    "analysis": "<b>Physical Principle:</b> The <b>Curtin-Hammett Principle</b> states that product distribution depends only on the relative energies of the transition states, regardless of ground-state equilibrium concentrations.",
     "next_steps": "1. Research the deamination of 4-t-butylcyclohexylamines. 2. Model conformer kinetics using Python simulations."
   },
   {
     "id": "MSTR_102", "rank": "A", "domain": "KINETICS", "goal": "Marcus Inverted Region",
-    "question": "In Marcus Theory, what happens to the rate when driving force ($-\\Delta G^{\\circ}$) exceeds reorganization energy ($\\lambda$)?",
+    "question": "In Marcus Theory, what happens to the rate when driving force (−ΔG°) exceeds reorganization energy (λ)?",
     "opt_up": "The reaction rate decreases", "opt_right": "The reaction rate increases", "opt_left": "The reaction rate remains constant",
     "correct": "UP", "expl_up": "CORRECT. The crossing point of potential energy surfaces moves back, increasing the barrier.",
-    "expl_right": "TRAP. This intuition fails in the highly exothermic inverted regime.", "expl_left": "INCORRECT. The rate is highly sensitive to changes in the driving force in this region.",
-    "analysis": "<b>Physical Principle:</b> In the <b>Marcus Inverted Region</b>, the activation energy increases as the reaction becomes more exothermic ($-\\Delta G^{\\circ} > \\lambda$), leading to a paradoxically slower rate.",
+    "expl_right": "TRAP. This intuition fails in the highly exothermic inverted regime.",
+    "expl_left": "INCORRECT. The rate is highly sensitive to changes in the driving force in this region.",
+    "analysis": "<b>Physical Principle:</b> In the <b>Marcus Inverted Region</b>, the activation energy increases as the reaction becomes more exothermic (−ΔG° > λ), leading to a paradoxical decrease in rate.",
     "next_steps": "1. Analyze photosynthetic charge separation centers. 2. Calculate reorganization energy using DFT methods."
   }
   // PASTE ALL 102 OBJECTS HERE FROM YOUR MERGER EXPORT
@@ -1755,7 +1758,6 @@ const POOL = [
 "next_steps": "1. Derive equilibrium conditions from minimization of Gibbs free energy. 2. Apply chemical potential equality to phase diagrams. UCT_02"
 }
 ];
-];
 
 let INDEX = 0, SCORE = 0;
 
@@ -1770,7 +1772,8 @@ function renderCard() {
 
     const card = document.createElement('div');
     card.className = "card";
-    // Standard Concatenation to avoid Template Literal Bug
+    
+    // UI Fix: Standard concatenation to prevent Template Literal failure on mobile
     const rankClass = (data.rank === 'A') ? "rank-tag rank-a-glow" : "rank-tag";
     card.innerHTML = '<div class="' + rankClass + '">RANK ' + data.rank + '</div>' +
                      '<div class="card-top">' +
@@ -1797,13 +1800,15 @@ function bindPhysics(el, data) {
         if (!isDragging) return;
         const cx = e.touches[0].clientX, cy = e.touches[0].clientY;
         const dist = Math.sqrt(Math.pow(cx - startX, 2) + Math.pow(cy - startY, 2));
-        let ang = Math.atan2(cx - pivotX, -(cy - pivotY)) * (180 / Math.PI);
-        el.style.transform = 'rotate(' + Math.max(-8, Math.min(8, ang)) + 'deg)';
+        let angle = Math.atan2(cx - pivotX, -(cy - pivotY)) * (180 / Math.PI);
+        
+        el.style.transform = 'rotate(' + Math.max(-8, Math.min(8, angle)) + 'deg)';
         const progress = Math.min(Math.max(0, dist - 20) / 80, 1);
         qT.style.opacity = 1 - progress; ovT.style.opacity = progress;
 
         Object.values(cols).forEach(c => c.classList.remove('active'));
-        let sel = "UP"; if (ang < -15) sel = "LEFT"; else if (ang > 15) sel = "RIGHT";
+        let sel = "UP"; if (angle < -15) sel = "LEFT"; else if (angle > 15) sel = "RIGHT";
+        
         cols[sel].classList.add('active');
         ovT.innerHTML = '<span style="font-size:0.8rem; color:var(--gold); display:block; margin-bottom:8px;">HEURISTIC</span>' + data['expl_' + sel.toLowerCase()];
     });
@@ -1811,25 +1816,29 @@ function bindPhysics(el, data) {
     window.addEventListener('touchend', e => {
         if (!isDragging) return; isDragging = false;
         const ex = e.changedTouches[0].clientX, ey = e.changedTouches[0].clientY;
-        const total = Math.sqrt(Math.pow(ex - startX, 2) + Math.pow(ey - startY, 2));
-        const ang = Math.atan2(ex - pivotX, -(ey - pivotY)) * (180 / Math.PI);
+        const totalDrag = Math.sqrt(Math.pow(ex - startX, 2) + Math.pow(ey - startY, 2));
+        const angle = Math.atan2(ex - pivotX, -(ey - pivotY)) * (180 / Math.PI);
+
         // HARD STRETCH LOGIC: RANK A = 160px
         const threshold = (data.rank === "A") ? 160 : 110;
 
-        if (total > threshold) {
-            let dir = "UP"; if (ang < -15) dir = "LEFT"; else if (ang > 15) dir = "RIGHT";
+        if (totalDrag > threshold) {
+            let dir = "UP"; if (angle < -15) dir = "LEFT"; else if (angle > 15) dir = "RIGHT";
             finishSwipe(el, data, dir);
         } else { resetCard(el); }
     });
 }
 
 function finishSwipe(el, data, dir) {
-    const isCorr = (dir === data.correct);
-    el.style.transition = 'transform 0.4s ease-in, opacity 0.4s'; el.style.opacity = '0';
+    const isCorrect = (dir === data.correct);
+    el.style.transition = 'transform 0.4s ease-in, opacity 0.4s';
+    el.style.opacity = '0';
     el.style.transform = 'translate(' + (dir === "UP" ? 0 : (dir === "LEFT" ? -500 : 500)) + 'px, ' + (dir === "UP" ? -500 : 0) + 'px)';
-    if(isCorr) SCORE++;
+    
+    if(isCorrect) SCORE++;
     document.getElementById('score-disp').innerText = "MASTERY: " + Math.round((SCORE/(INDEX+1))*100) + "%";
     document.getElementById('progress').style.width = ((INDEX+1)/POOL.length)*100 + "%";
+    
     setTimeout(() => { showAnalysis(data); el.remove(); }, 300);
 }
 
@@ -1840,9 +1849,14 @@ function showAnalysis(data) {
     document.getElementById('analysis-modal').classList.add('open');
 }
 
-function closeModal() { document.getElementById('analysis-modal').classList.remove('open'); INDEX++; renderCard(); }
+function closeModal() { 
+    document.getElementById('analysis-modal').classList.remove('open'); 
+    INDEX++; renderCard(); 
+}
+
 function resetCard(el) { el.style.transition = '0.3s ease'; el.style.transform = 'rotate(0deg)'; el.querySelector('#q-text').style.opacity = 1; el.querySelector('#ov-text').style.opacity = 0; }
 function renderEnd() { document.getElementById('stage').innerHTML = '<div class="card" style="justify-content:center; align-items:center;"><div class="card-q">CALIBRATION COMPLETE</div><button class="modal-btn" onclick="location.reload()" style="width:80%; margin-top:30px;">RESTART</button></div>'; }
+
 renderCard();
 </script>
 </body>
