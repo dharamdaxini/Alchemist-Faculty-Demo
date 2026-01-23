@@ -1,4 +1,4 @@
-/* ALCHEMIST V170: UI CORRECTION */
+/* ALCHEMIST V170: UI RECOVERY */
 :root { 
     --bg: #05070a; 
     --card: #12151c; 
@@ -6,15 +6,15 @@
     --rankA: #ff4b2b; 
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
-    background: var(--bg) !important; 
-    color: white; 
+    background-color: var(--bg) !important; 
+    color: #ffffff !important; 
     font-family: -apple-system, system-ui, sans-serif; 
     margin: 0; 
     overflow: hidden; 
-    height: 100vh;
+    height: 100vh; 
     width: 100vw;
 }
 
@@ -25,52 +25,38 @@ body {
     border-bottom: 1px solid #222; 
     font-size: 13px; 
     font-weight: 800;
-    letter-spacing: 0.5px;
 }
 
 #card-dock { 
     position: relative; 
-    height: 75vh; 
+    height: 70vh; 
     width: 90%; 
-    margin: 4vh auto; 
-    perspective: 1000px; /* Essential for 3D swipe rotation */
+    margin: 5vh auto; 
 }
 
 .card { 
     position: absolute; 
     top: 0; left: 0;
-    width: 100%; 
-    height: 100%; 
+    width: 100%; height: 100%; 
     background: var(--card); 
     border-radius: 16px; 
     border: 1px solid #333; 
-    display: flex; 
-    flex-direction: column;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.8); 
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7); 
     touch-action: none; 
     transition: transform 0.1s ease-out;
-    z-index: 10;
 }
 
 .content { 
-    padding: 35px 25px; 
-    flex-grow: 1; 
-    font-size: 20px; 
-    line-height: 1.6; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 30px; flex-grow: 1; 
+    font-size: 18px; line-height: 1.6; 
+    display: flex; align-items: center; justify-content: center;
     text-align: center;
 }
 
 .meta { 
-    padding: 15px 20px; 
-    background: rgba(255,255,255,0.03); 
-    font-size: 11px; 
-    color: #666; 
-    border-bottom-left-radius: 16px; 
-    border-bottom-right-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    text-transform: uppercase;
+    padding: 15px; background: rgba(0,0,0,0.3); 
+    font-size: 11px; color: #666; 
+    border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+    display: flex; justify-content: space-between;
 }
