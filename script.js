@@ -1,29 +1,35 @@
-/* script.js - V170 RECOVERY ENGINE */
-window.onerror = function(m, u, l) { alert("Error: " + m + " at line " + l); return false; };
+/* ALCHEMIST V170: ENGINE LOGIC */
+
+// 1. PANIC DEBUGGER: Catches crashes in Acode/Mobile browsers
+window.onerror = function(m, u, l) {
+    alert("CRITICAL HALT: " + m + "\nLine: " + l);
+    return false;
+};
 
 let currentIndex = 0;
 
-function bootEngine() {
-    const dock = document.getElementById('card-dock');
-    // Check for variable from data.js
-    if (typeof MASTER_POOL === 'undefined') {
-        if (dock) dock.innerHTML = "<div style='color:#4a90e2; padding:40px;'>Syncing Data...</div>";
-        setTimeout(bootEngine, 100);
-        return;
-    }
-    renderCard(0);
-}
-
 function renderCard(index) {
     const dock = document.getElementById('card-dock');
-    if (!dock || index >= MASTER_POOL.length) return;
-    dock.innerHTML = ''; // Clear dock to prevent overlaps
+    if (!dock) return;
+
+    // Safety check for the 'undefined' error found in your console
+    if (typeof MASTER_POOL === 'undefined') {
+        dock.innerHTML = "<div style='color:#ff4b2b; padding:40px; text-align:center;'>DATA LINK FAILURE: MASTER_POOL is undefined.</div>";
+        return;
+    }
+
+    if (index >= MASTER_POOL.length) {
+        dock.innerHTML = "<div class='card'><div class='content'>Mastery Complete. 102/102 questions analyzed.</div></div>";
+        return;
+    }
 
     const data = MASTER_POOL[index];
     const card = document.createElement('div');
+    
+    // UI Logic: Signals Rank A cards with a pulse
     card.className = 'card' + (data.rank === 'A' ? ' rank-a-pulse' : '');
     
-    // UI Construction using keys from your forensic audit
+    // Key Mapping: question, id, rank
     card.innerHTML = '<div class="content">' + data.question + '</div>' +
                      '<div class="meta"><span>ID: ' + data.id + '</span><span>RANK ' + data.rank + '</span></div>';
 
@@ -33,7 +39,7 @@ function renderCard(index) {
 
 function setupSwipe(card, rank) {
     let startX = 0, dist = 0;
-    const threshold = (rank === 'A') ? 160 : 110;
+    const threshold = (rank === 'A') ? 160 : 110; // "Hard Stretch" logic
 
     card.addEventListener('touchstart', e => { startX = e.touches[0].pageX; }, {passive: true});
     card.addEventListener('touchmove', e => {
@@ -43,9 +49,9 @@ function setupSwipe(card, rank) {
 
     card.addEventListener('touchend', () => {
         if (Math.abs(dist) > threshold) {
-            card.style.transition = '0.3s';
+            card.style.transition = '0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             card.style.transform = 'translateX(' + (dist > 0 ? 1000 : -1000) + 'px)';
-            setTimeout(nextCard, 200);
+            setTimeout(nextCard, 250);
         } else {
             card.style.transform = 'translateX(0) rotate(0)';
         }
@@ -54,9 +60,13 @@ function setupSwipe(card, rank) {
 
 function nextCard() {
     currentIndex++;
+    const dock = document.getElementById('card-dock');
+    if (dock) dock.innerHTML = ''; 
     renderCard(currentIndex);
-    const m = document.getElementById('mastery');
-    if (m) m.innerText = 'MASTERY: ' + Math.round((currentIndex / MASTER_POOL.length) * 100) + '%';
+    
+    const mastery = document.getElementById('mastery');
+    if (mastery) mastery.innerText = 'MASTERY: ' + Math.round((currentIndex / MASTER_POOL.length) * 100) + '%';
 }
 
-window.onload = bootEngine;
+// Start rendering once the bootloader finishes
+window.onload = () => { renderCard(0); };
