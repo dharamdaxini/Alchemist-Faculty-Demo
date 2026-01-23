@@ -1,4 +1,40 @@
+/**
+ * ALCHEMIST V170 | CANONICAL MASTER DATASET
+ * Format: JSON Object Array
+ */
 const V170_MASTER_SET = [
+  {
+    "id": "MSTR_077",
+    "rank": "A",
+    "domain": "ORGANIC",
+    "goal": "Curtin-Hammett Principle",
+    "question": "In interconverting conformers A ⇌ B, what determines the product ratio P<sub>A</sub> : P<sub>B</sub>?",
+    "opt_up": "Relative energies of transition states",
+    "opt_right": "Relative populations of conformers",
+    "opt_left": "Speed of interconversion alone",
+    "correct": "UP",
+    "expl_up": "CORRECT. Selectivity is governed by ΔΔG‡ between transition states.",
+    "expl_right": "TRAP. Ground-state stability does not dictate product outcome in rapid equilibria.",
+    "expl_left": "INCOMPLETE. While interconversion must be fast, it is not the determinant.",
+    "analysis": "<b>Physical Principle:</b> The <b>Curtin-Hammett Principle</b> states that product distribution depends only on the relative energies of the transition states, regardless of ground-state populations.",
+    "next_steps": "1. Research the deamination of 4-t-butylcyclohexylamines. 2. Model conformer kinetics using simulations."
+  },
+  {
+    "id": "MSTR_102",
+    "rank": "A",
+    "domain": "KINETICS",
+    "goal": "Marcus Inverted Region",
+    "question": "In Marcus Theory, what happens to the rate when −ΔG° exceeds reorganization energy (λ)?",
+    "opt_up": "The reaction rate decreases",
+    "opt_right": "The reaction rate increases",
+    "opt_left": "The reaction rate remains constant",
+    "correct": "UP",
+    "expl_up": "CORRECT. The crossing point of potential surfaces moves back, increasing the activation barrier.",
+    "expl_right": "TRAP. This intuition fails in the highly exothermic inverted regime.",
+    "expl_left": "INCORRECT. The rate is highly sensitive to changes in the driving force here.",
+    "analysis": "<b>Physical Principle:</b> In the <b>Marcus Inverted Region</b>, the activation energy paradoxically increases as the reaction becomes more exothermic (−ΔG° > λ), slowing the rate of electron transfer.",
+    "next_steps": "1. Analyze photosynthetic charge separation. 2. Calculate reorganization energy via DFT."
+  },
   {
     "id": "MSTR_001",
     "rank": "E",
